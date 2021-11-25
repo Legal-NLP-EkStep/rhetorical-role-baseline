@@ -9,8 +9,8 @@ from utils import log
 
 
 
-RHETORICAL_LABELS = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
-RHETORICAL_LABELS_PRES = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
+PUBMED_LABELS = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
+PUBMED_LABELS_PRES = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
 
 #
 #
@@ -33,7 +33,7 @@ GEN_LABELS = ["PREAMBLE","NONE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONE
 GEN_LABELS_PRES = GEN_LABELS
 
 DRI_TASK = "DRI"
-RHETORICAL_TASK = "rhetorical_task"
+PUBMED_TASK = "pubmed-20k"
 NICTA_TASK = "nicta_piboso"
 ART_TASK = "ART"
 
@@ -67,14 +67,14 @@ def art_task_small(train_batch_size,  max_docs):
                 dev_metric="acc", portion_training_data=1.0/3.0,
                 task_folder_name=ART_TASK, short_name="mART", labels_pres=ART_LABELS_PRES)
 
-def rhetorical_task(train_batch_size,  max_docs):
-    return Task(RHETORICAL_TASK, RHETORICAL_LABELS,
-                 train_batch_size,  1,  max_docs, short_name="PMD", labels_pres=RHETORICAL_LABELS_PRES)
+def pubmed_task(train_batch_size,  max_docs):
+    return Task(PUBMED_TASK, PUBMED_LABELS,
+                 train_batch_size,  1,  max_docs, short_name="PMD", labels_pres=PUBMED_LABELS_PRES)
 
-def rhetorical_task_small(train_batch_size,  max_docs):
-    return Task(RHETORICAL_TASK + "_small", RHETORICAL_LABELS,
+def pubmed_task_small(train_batch_size,  max_docs):
+    return Task(PUBMED_TASK + "_small", PUBMED_LABELS,
                  train_batch_size,  1,  max_docs,
-                portion_training_data=1.0/20.0, task_folder_name=RHETORICAL_TASK, short_name="mPMD", labels_pres=RHETORICAL_LABELS_PRES)
+                portion_training_data=1.0/20.0, task_folder_name=PUBMED_TASK, short_name="mPMD", labels_pres=PUBMED_LABELS_PRES)
 
 
 def nicta_task(train_batch_size,  max_docs):
