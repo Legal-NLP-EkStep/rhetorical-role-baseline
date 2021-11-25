@@ -63,8 +63,7 @@ def write_in_hsln_format(input_json,hsln_format_txt_dirpath,tokenizer):
     return filename_sent_boundries
 
 if __name__=="__main__":
-    [_,input_dir, prediction_output_json_path] = sys.argv
-    model_path = './model.pt'
+    [_,input_dir, prediction_output_json_path, model_path] = sys.argv
 
     BERT_VOCAB = "bert-base-uncased"
     BERT_MODEL = "bert-base-uncased"
