@@ -46,8 +46,11 @@ To install en_core_web_trf, run:
 
 
 There are two  files:
-- Training set http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_train_v1.1.json
-- Dev set in the distractor setting http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_dev_distractor_v1.json
+- Training set https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json
+
+- Dev set in the distractor setting 
+https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json
+
 
 
 
