@@ -72,7 +72,7 @@ a dict with the following keys:
 
 
 
-###Data preparation for  your own  data
+### Data preparation for  your own  data
 
 If you want to train a the model on your own dataset and do the inference,you will need to preprocess the data to convert it 
 into the required json format.To do so,follow the following steps:
