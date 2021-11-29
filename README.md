@@ -1,28 +1,28 @@
-#Automatic Structuring of Indian Court Judgements
+# Automatic Structuring of Indian Court Judgements
 
 
 Automatic Structuring of judgments  focuses on segmenting a judgment into coherent chunks where each chunk
 belongs to a particular rhetorical role.This segmentation can play an important role in tasks like
 Summarization and act as building block for developing other legal  AI applications. 
 
-###Need for structuring Indian court judgments
+### Need for structuring Indian court judgments
 Indian court judgements are structured in form of paragraphs but there are no explicit sections mentioned in
 the text. Judges have their own style of writing judgements which varies significantly by courts and case
 types. Since the court judgements tend to be long, automatic structuring of the judgements will significantly
 improve information retrieval and processing of the judgment.
 
-###Data Collection
+### Data Collection
 The data collection process was aimed at collecting sentence level rhetorical roles in Indian court judgements.
 The data annotations were done voluntarily by Law students from multiple Indian law universities where each judgment sentence was 
 classified  into one of the seven pre defined rhetorical role.For a detailed overview of the process,please refer to the paper
 
-###Baseline
+### Baseline
 The baseline model was created using unified deep
 learning architecture SciBERT-HSLN approach suggested by (Brack et al., 2021). SciBERT was replaced
 with BERT BASE which are published by (Devlin et
 al., 2018). Baseline model achieved micro f1 of 77.7.
 
-###Evaluation metric
+### Evaluation metric
 The evaluation metric used here is micro f1.
 
 
