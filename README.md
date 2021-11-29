@@ -1,20 +1,20 @@
 # Automatic Structuring of Indian Court Judgements
 
 
-Automatic Structuring of judgments  focuses on segmenting a judgment into coherent chunks where each chunk
+Automatic Structuring of judgements  focuses on segmenting a judgement into coherent chunks where each chunk
 belongs to a particular rhetorical role.This segmentation can play an important role in tasks like
 Summarization and act as building block for developing other legal  AI applications. 
 
-### Need for structuring Indian court judgments
+### Need for structuring Indian court judgements
 Indian court judgements are structured in form of paragraphs but there are no explicit sections mentioned in
 the text. Judges have their own style of writing judgements which varies significantly by courts and case
 types. Since the court judgements tend to be long, automatic structuring of the judgements will significantly
-improve information retrieval and processing of the judgment.
+improve information retrieval and processing of the judgement.
 
 ### Data Collection
 The data collection process was aimed at collecting sentence level rhetorical roles in Indian court judgements.
-The data annotations were done voluntarily by Law students from multiple Indian law universities where each judgment sentence was 
-classified  into one of the seven pre defined rhetorical role.For a detailed overview of the process,please refer to the paper
+The data annotations were done voluntarily by Law students from multiple Indian law universities where each judgement sentence was 
+classified  into one of the seven pre-defined rhetorical role.For a detailed overview of the process,please refer to the paper
 
 ### Baseline
 The baseline model was created using unified deep
@@ -53,7 +53,7 @@ There are two  files:
 
 ## Input Data Format
 
-The top level structure of each JSON file is a list, where each entry represents a judgment-labels data point. Each data point is
+The top level structure of each JSON file is a list, where each entry represents a judgement-labels data point. Each data point is
 a dict with the following keys:
 - `id`: a unique id for this  data point. This is useful for evaluation.
 - `annotations`:list of dict.The items in the dict are:
@@ -64,32 +64,46 @@ a dict with the following keys:
       - `end`:integer.end index of the text
       - `text`:string.The actual text of the sentence
       - `labels`:list.the labels that correspond to the text
-- `data`: the actual text of the judgment.
+- `data`: the actual text of the judgement.
 - `meta`: a string.It tells about the category of the case(Criminal,Tax etc.)
 
-##Model Training
 
 
-###Data preparation for a different dataset
+###Data preparation for  your own  data
 
-If you want to train the model on your own dataset,you will need to preprocess the data to convert it 
+If you want to train a the model on your own dataset and do the inference,you will need to preprocess the data to convert it 
 into the required json format.To do so,follow the following steps:
 
+The data prep file requires the data to be in the following format:
+It should be a list of dict where each dict corresponds to a judgement.Each dict has the following keys:
+- `id`: a unique id for this  data point. This is useful for evaluation.
+- `annotations`:list of dict.The items in the dict are:
+  - `result`a list of dictionaries containing sentence text and corresponding labels pair.The keys are:
+    - `id`:unique id of each sentence
+    - `value`:a dictionary with the following keys:
+      - `start`:integer.starting index of the text
+      - `end`:integer.end index of the text
+      - `text`:string.The actual text of the sentence
+      - `labels`:list.the labels that correspond to the text
+- `data`: the actual text of the judgement.
+
+To convert this into the format accepted by the model,run the data prep by:
 ```
 python infer_data_prep.py
 ```
 
 
 ### Preprocessing
-  
-  Preprocess the training and dev sets using:
+  Once the data is in the required json format,the data need to be tokenized and written in the
+  particular folder.This can be done by:
   ```
   python tokenize_files.py
   ```
   
 ### Training
   
-  Train the hsln  model
+  To train the HSLN model on the given data,we need to run the baseline_run.py.Model parameters like
+max_epochs,num_batches etc. can be configured in the  baseline_run.py.To run the model on default parameters,
   ```
    python baseline_run.py 
   ```
@@ -116,7 +130,7 @@ The prediction file format will be same as the training json with the following 
       - `end`:integer.end index of the text
       - `text`:string.The actual text of the sentence
       - `labels`:list.the labels that correspond to the text
-- `data`: the actual text of the judgment.
+- `data`: the actual text of the judgement.
 - `meta`: a string.It tells about the category of the case(Criminal,Tax etc.)
 - 
 ## Model Submission and Test Set Evaluation
