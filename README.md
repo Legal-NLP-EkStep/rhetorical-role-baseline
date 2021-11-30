@@ -35,7 +35,7 @@ a dict with the following keys:
 - `meta`: a string.It tells about the category of the case(Criminal,Tax etc.)
 
 
-## 2. Run Baseline Model on dev data
+## 2. Inference of Baseline Model on dev data
 The baseline model was created using unified deep
 learning architecture SciBERT-HSLN approach suggested by (Brack et al., 2021). SciBERT was replaced
 with BERT BASE which are published by (Devlin et
@@ -67,6 +67,10 @@ The evaluation metric used here is micro f1.
 
 To train the model on data other than the one provided, we will need to split raw text into sentences. We use spacy transformer model for that. Install the spacy transformers model
 by following the steps below:
+To install the requirements,follow the instructions
+```
+pip install -r requirements.txt
+```
 
 To install en_core_web_trf, run:
 ```
@@ -74,7 +78,7 @@ To install en_core_web_trf, run:
 ```
 
 
-### 4.1 Data preparation for  your own  data
+### 4.1 Data preparation for your own  data
 
 If you want to train a the model on your own dataset and do the inference,you will need to preprocess the data to convert it 
 into the required json format.To do so,follow the following steps:
@@ -109,7 +113,7 @@ The output json will be written in the path provided as output_json_path.
 The prediction file format will be same as the training json with `labels` filled with predicted labels.
 
 
-## 5. Training Baseline Model on custom data
+## 5. Training Baseline Model on train data
 For training baseline model on your custom data, follow steps  4.1 Data preparation for  your own  data
 
 ### 5.1 Preprocessing
