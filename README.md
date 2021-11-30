@@ -55,7 +55,7 @@ pip install -r requirements.txt
 #### 2.1.2 Download pretrained model
 [TO_DO] Link to model.pt
 
-#### 2.1.2 Run inference on dev data
+#### 2.1.3 Run inference on dev data
 The downloaded dev file. 
 To convert this into the format accepted by the model,run the data prep by:
 ```
