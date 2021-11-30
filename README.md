@@ -17,7 +17,6 @@ There are two  files:
 
 - [Dev set](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/dev.json)
 
-To preserve the integrity of test results, we do not release the test set to the public. Instead, we require you to submit your model so that we can run it on the test set for you.  
 
 ### 1.2 Input Data Format
 
@@ -36,11 +35,11 @@ a dict with the following keys:
 - `meta`: a string.It tells about the category of the case(Criminal,Tax etc.)
 
 
-## 2. Baseline Model
+## 2. Run Baseline Model on dev set
 The baseline model was created using unified deep
 learning architecture SciBERT-HSLN approach suggested by (Brack et al., 2021). SciBERT was replaced
 with BERT BASE which are published by (Devlin et
-al., 2018). Baseline model achieved micro f1 of 77.7.
+al., 2018). Baseline model achieved micro f1 of 77.7 on hiddent test set. 
 
 ### 2.1 Run Baseline Model on dev dataset
 #### 2.1.1 Install Dependencies
@@ -61,7 +60,7 @@ python infer_new.py dev_json_path output_json_path model_path
 ```
 
 ## 3. Submission & Evaluations
-We use Codalab for test set evaluation. In the distractor setting, you must submit your code and provide a Docker environment. Your code will run on the test set. please refer to Submission guide for more details. 
+To preserve the integrity of test results, we do not release the test set to the public. Instead, we require you to submit your model so that we can run it on the test set for you.  We use Codalab for test set evaluation. Please refer to [Submission Guide](https://worksheets.codalab.org/worksheets/0xc791430db3c74588b87723255bd2d9db) for more details. 
 The evaluation metric used here is micro f1.
 
 ## 4. Inference of Baseline Model on custom data
