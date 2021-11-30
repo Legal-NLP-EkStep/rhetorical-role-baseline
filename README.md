@@ -80,21 +80,24 @@ To install en_core_web_trf, run:
 
 ### 4.1 Data preparation for your own  data
 
-If you want to train a the model on your own dataset and do the inference,you will need to preprocess the data to convert it 
+If you want to train  the model on your own dataset and do the inference,you will need to preprocess the data to convert it 
 into the required json format.To do so,follow the following steps:
 
 The data prep file requires the data to be in the following format:
 It should be a list of dict where each dict corresponds to a judgement.Each dict has the following keys:
-- `id`: a unique id for this  data point. This is useful for evaluation.
-- `annotations`:list of dict.The items in the dict are:
-  - `result`a list of dictionaries containing sentence text and corresponding labels pair.The keys are:
-    - `id`:unique id of each sentence
-    - `value`:a dictionary with the following keys:
-      - `start`:integer.starting index of the text
-      - `end`:integer.end index of the text
-      - `text`:string.The actual text of the sentence
-      - `labels`:list.the labels that correspond to the text
-- `data`: the actual text of the judgement.
+- `id`: a unique id for this data point. This is useful for evaluation.
+- `data`: dict with the key text which contains the actual text of the judgement.
+For eg.
+```
+[  {"id": 1,
+  "data": { "text": "input_text_1" } 
+  },
+  {"id": 2,
+  "data": { "text": "input_text_2" } 
+  },
+   ....
+]
+```
 
 To convert this into the format accepted by the model,run the data prep by:
 ```
@@ -114,10 +117,12 @@ The prediction file format will be same as the training json with `labels` fille
 
 
 ## 5. Training Baseline Model on train data
-For training baseline model on your custom data, follow steps  4.1 Data preparation for  your own  data
+The training data is in the Input Data Format specified above.To train the model on your custom data,
+please convert it into the required format.
+For training baseline model on train data, follow steps
 
 ### 5.1 Preprocessing
-  Once the data is in the required json format,the data need to be tokenized and written in the
+  Once the data is in the input data format,the data needs to be tokenized and written in the
   particular folder.This can be done by:
   ```
   python tokenize_files.py
@@ -136,4 +141,6 @@ max_epochs,num_batches etc. can be configured in the  baseline_run.py.To run the
 ## License
 The automatic structuring dataset is distribued under the [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/legalcode) license.
 The code is distribued under the Apache 2.0 license.
+
+
 
