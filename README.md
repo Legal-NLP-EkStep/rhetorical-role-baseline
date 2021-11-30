@@ -1,7 +1,7 @@
 # BUILD: Benchmark for Understanding Indian Legal Documents
 
 
-Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text.  Identification ofrhetorical roles of the sentences provides structure to the judgements. This is an important step which will act as building blockfor developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotated data , evaluation methodology and baseline prediction model.
+Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text.  Identification ofrhetorical roles of the sentences provides structure to the judgements. This is an important step which will act as building blockfor developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotated data , evaluation methodology and baseline prediction model. This work is part of [OpenNyAI](https://opennyai.org/) mission which is funded by [EkStep Foundation](https://ekstep.org/).
 
 
 ## 1. Data
@@ -139,7 +139,7 @@ max_epochs,num_batches etc. can be configured in the  baseline_run.py.To run the
 
 
 ## License
-The automatic structuring dataset is distribued under the [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/legalcode) license.
+BUILD dataset is distribued under the [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/legalcode) license.
 The code is distribued under the Apache 2.0 license.
 
 
