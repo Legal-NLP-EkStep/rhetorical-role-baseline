@@ -51,7 +51,7 @@ To install the requirements,follow the instructions
 pip install -r requirements.txt
 ```
 #### 2.1.2 Download pretrained model
-[TO_DO] Link to model.pt
+[Model File](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Model/model.pt)
 
 #### 2.1.3 Run inference on dev data
 The downloaded dev file. 
