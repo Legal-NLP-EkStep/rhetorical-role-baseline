@@ -13,11 +13,13 @@ classified  into one of the seven pre-defined rhetorical role.For a detailed ove
 
 
 There are two  files:
+[TO_DO]
 - Training set https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json
 
 - Dev set in the distractor setting 
 https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json
 
+To preserve the integrity of test results, we do not release the test set to the public. Instead, we require you to submit your model so that we can run it on the test set for you.  
 
 ### 1.2 Input Data Format
 
@@ -42,13 +44,27 @@ learning architecture SciBERT-HSLN approach suggested by (Brack et al., 2021). S
 with BERT BASE which are published by (Devlin et
 al., 2018). Baseline model achieved micro f1 of 77.7.
 
-## 2.1 Requirements
-
+### 2.1 Run Baseline Model on dev dataset
+#### 2.1.1 Install Dependencies
 Python 3.8
 
 To install the requirements,follow the instructions
 ```
 pip install -r requirements.txt
+```
+#### 2.1.2 Download pretrained model
+[TO_DO] Link to model.pt
+
+#### 2.1.2 Run inference on dev data
+The downloaded dev file. 
+To convert this into the format accepted by the model,run the data prep by:
+```
+python infer_data_prep.py
+```
+To run the inference,run
+```
+python infer_new.py input_json_path output_json_path model_path
+
 ```
 
 ## 3. Submission & Evaluations
@@ -57,7 +73,7 @@ The evaluation metric used here is micro f1.
 
 ## 4. Inference of Baseline Model on custom data
 
-To train the model on data other than the one provided,we will need to install the spacy transformers model
+To train the model on data other than the one provided, we will need to split raw text into sentences. We use spacy transformer model for that. Install the spacy transformers model
 by following the steps below:
 
 To install en_core_web_trf, run:
