@@ -1,7 +1,7 @@
 # BUILD: Benchmark for Understanding Indian Legal Documents
 
 
-Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text.  Identification ofrhetorical roles of the sentences provides structure to the judgements. This is an important step which will act as building blockfor developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotated data sets , evaluation methodology and baseline prediction model.
+Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text.  Identification ofrhetorical roles of the sentences provides structure to the judgements. This is an important step which will act as building blockfor developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotated data , evaluation methodology and baseline prediction model.
 
 
 ## 1. Data
@@ -13,9 +13,9 @@ classified  into one of the seven pre-defined rhetorical role.For a detailed ove
 
 
 There are two  files:
-- [Training set](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json)
+- [Training Data](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json)
 
-- [Dev set](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/dev.json)
+- [Dev Data](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/dev.json)
 
 
 ### 1.2 Input Data Format
@@ -35,13 +35,13 @@ a dict with the following keys:
 - `meta`: a string.It tells about the category of the case(Criminal,Tax etc.)
 
 
-## 2. Run Baseline Model on dev set
+## 2. Run Baseline Model on dev data
 The baseline model was created using unified deep
 learning architecture SciBERT-HSLN approach suggested by (Brack et al., 2021). SciBERT was replaced
 with BERT BASE which are published by (Devlin et
-al., 2018). Baseline model achieved micro f1 of 77.7 on hiddent test set. 
+al., 2018). Baseline model achieved micro f1 of 77.7 on hiddent test data. 
 
-### 2.1 Run Baseline Model on dev dataset
+### 2.1 Run Baseline Model on dev data
 #### 2.1.1 Install Dependencies
 Python 3.8
 
@@ -60,7 +60,7 @@ python infer_new.py dev_json_path output_json_path model_path
 ```
 
 ## 3. Submission & Evaluations
-To preserve the integrity of test results, we do not release the test set to the public. Instead, we require you to submit your model so that we can run it on the test set for you.  We use Codalab for test set evaluation. Please refer to [Submission Guide](https://worksheets.codalab.org/worksheets/0xc791430db3c74588b87723255bd2d9db) for more details. 
+To preserve the integrity of test results, we do not release the test data to the public. Instead, we require you to submit your model so that we can run it on the test data for you.  We use Codalab for test data evaluation. Please refer to [Submission Guide](https://worksheets.codalab.org/worksheets/0xc791430db3c74588b87723255bd2d9db) for more details. 
 The evaluation metric used here is micro f1.
 
 ## 4. Inference of Baseline Model on custom data
