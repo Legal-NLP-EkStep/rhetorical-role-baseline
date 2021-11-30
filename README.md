@@ -1,20 +1,13 @@
-# Automatic Structuring of Indian Court Judgements
+# BUILD: Benchmark for Understanding Indian Legal Documents
 
 
-Automatic Structuring of judgements  focuses on segmenting a judgement into coherent chunks where each chunk
-belongs to a particular rhetorical role.This segmentation can play an important role in tasks like
-Summarization and act as building block for developing other legal  AI applications. 
+Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text.  Identification ofrhetorical roles of the sentences provides structure to the judgements. This is an important step which will act as building blockfor developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotateddata sets , evaluation methodology and baseline prediction model.
 
-### Need for structuring Indian court judgements
-Indian court judgements are structured in form of paragraphs but there are no explicit sections mentioned in
-the text. Judges have their own style of writing judgements which varies significantly by courts and case
-types. Since the court judgements tend to be long, automatic structuring of the judgements will significantly
-improve information retrieval and processing of the judgement.
 
 ### Data Collection
 The data collection process was aimed at collecting sentence level rhetorical roles in Indian court judgements.
 The data annotations were done voluntarily by Law students from multiple Indian law universities where each judgement sentence was 
-classified  into one of the seven pre-defined rhetorical role.For a detailed overview of the process,please refer to the paper
+classified  into one of the seven pre-defined rhetorical role.For a detailed overview of the process,please refer to the paper.
 
 ### Baseline
 The baseline model was created using unified deep
