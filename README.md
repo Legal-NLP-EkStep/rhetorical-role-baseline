@@ -54,14 +54,9 @@ pip install -r requirements.txt
 [Model File](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Model/model.pt)
 
 #### 2.1.3 Run inference on dev data
-The downloaded dev file. 
-To convert this into the format accepted by the model,run the data prep by:
+ To run the inference on downloaded dev file , please run following command with appropriate paths
 ```
-python infer_data_prep.py
-```
-To run the inference,run
-```
-python infer_new.py input_json_path output_json_path model_path
+python infer_new.py dev_json_path output_json_path model_path
 
 ```
 
