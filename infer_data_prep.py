@@ -59,7 +59,7 @@ if __name__=="__main__":
 # ]
     prediction_input_ls_format =json.load(open(custom_data_path))
     #prediction_input_ls_format = json.load(open(prediction_input_files_path))
-    nlp = get_spacy_nlp_pipeline_for_indian_legal_text(model_name="en_core_web_sm",
+    nlp = get_spacy_nlp_pipeline_for_indian_legal_text(model_name="en_core_web_trf",
                                                        disable=["attribute_ruler", "lemmatizer", 'ner'])
     BERT_VOCAB = "bert-base-uncased"
     BERT_MODEL = "bert-base-uncased"
