@@ -50,14 +50,14 @@ def write_in_hsln_format(input_json,hsln_format_txt_dirpath,tokenizer):
                 final_string = final_string + "NONE" + "\t" + sent_tokens_txt + "\n"
         final_string = final_string + "\n"
 
-    with open(hsln_format_txt_dirpath + '/test_scibert.txt', "w") as file:
+    with open(hsln_format_txt_dirpath + '/test_scibert.txt', "w+") as file:
         file.write(final_string)
 
-    with open(hsln_format_txt_dirpath + '/train_scibert.txt', "w") as file:
+    with open(hsln_format_txt_dirpath + '/train_scibert.txt', "w+") as file:
         file.write(final_string)
-    with open(hsln_format_txt_dirpath + '/dev_scibert.txt', "w") as file:
+    with open(hsln_format_txt_dirpath + '/dev_scibert.txt', "w+") as file:
         file.write(final_string)
-    with open(hsln_format_txt_dirpath + '/sentece_boundries.json', 'w') as json_file:
+    with open(hsln_format_txt_dirpath + '/sentece_boundries.json', 'w+') as json_file:
         json.dump(filename_sent_boundries, json_file)
 
     return filename_sent_boundries
