@@ -1,17 +1,20 @@
 # BUILD: Benchmark for Understanding Indian Legal Documents
 
 
-Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text. Identification of rhetorical roles of the sentences provides structure to the judgements. This is an important step which will act as building block for developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotated data , evaluation methodology and baseline prediction model. This work is part of [OpenNyAI](https://opennyai.org/) mission which is funded by [EkStep Foundation](https://ekstep.org/).
+Indian Court Judgements have an inherent structure which is not explicitly mentioned in the judgement text. Assigning rhetorical roles to the sentences provides structure to the judgements. This is an important step which will act as building block for developing Legal AI solutions. We present benchmark for Rhetorical Role Prediction which include annotated data , evaluation methodology and baseline prediction model. This work is part of [OpenNyAI](https://opennyai.org/) mission which is funded by [EkStep Foundation](https://ekstep.org/).
 
-## 1. What are Rhetorical Roles of Court Judgements
-Typical structure of an Indian court judgement is as shown below. The flow is not linear and these roles can appear in any sequence.
+## 1. What are Rhetorical Roles of Court Judgements?
+Though there is no prescription for writing judgement,a judgement text follows an inherent structure. For example, a judgement text would begin with preamble, state facts of the case, courts analysis of the arguments from respondents and petitioners etc. Typical structure of an Indian court judgement is as shown below. The flow is not linear and these roles can appear in any sequence.
 ![Typical Structure of Indian Court Judgements](Rhetorical_Roles_Structure.png)
-Each of the sentence of the judgement text is marked with one the roles specified in [table](/README.md#appendix). More details with examples can be found in [MOOC](https://youtube.com/playlist?list=PL1z52lLL6eWnDnc3Wgfcu6neczrU3fFw0).
+The detailed definitions of each of the rhetorical roles is specified in [table](/README.md#appendix). 
+Each of the sentence of the judgement text is marked with one rhetorical role. Task is to predict the rhetorical role of each sentence. 
+This is sequential text classification because the rhetorical role of each of the sentence is not only dependent on the words of that sentence but also rhetorical roles of previous and next sentence. 
+More details of Rhetorical Roles definitions with examples can be found in [MOOC](https://youtube.com/playlist?list=PL1z52lLL6eWnDnc3Wgfcu6neczrU3fFw0).
 
 ## 2. Data
 The data collection process was aimed at collecting sentence level rhetorical roles in Indian court judgements.
-The data annotations were done voluntarily by Law students from multiple Indian law universities where each judgement sentence was 
-classified  into one of the seven pre-defined rhetorical role.For a detailed overview of the process,please refer to the paper.
+The data annotations were done voluntarily by Law students from multiple Indian law universities where each sentence was 
+classified  into one of the 13 pre-defined rhetorical roles.
 
 ### 2.1 Data Download 
 
