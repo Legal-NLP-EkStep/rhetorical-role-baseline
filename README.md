@@ -6,7 +6,7 @@ Indian Court Judgements have an inherent structure which is not explicitly menti
 ## 1. What are Rhetorical Roles of Court Judgements
 Typical structure of an Indian court judgement is as shown below. The flow is not linear and these roles can appear in any sequence.
 ![Typical Structure of Indian Court Judgements](Rhetorical_Roles_Structure.png)
-Each of the sentence of the judgement text is marked with one the roles specified in [table](/blob/main/README.md#1-what-are-rhetorical-roles-of-court-judgements) 
+Each of the sentence of the judgement text is marked with one the roles specified in [table](/Legal-NLP-EkStep/rhetorical-role-baseline/blob/main/README.md#1-what-are-rhetorical-roles-of-court-judgements) 
 
 ## 2. Data
 The data collection process was aimed at collecting sentence level rhetorical roles in Indian court judgements.
