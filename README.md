@@ -108,14 +108,14 @@ For eg.
 
 To convert this into the format accepted by the model,run the data prep by:
 ```
-python infer_data_prep.py
+python infer_data_prep.py custom_input.json custom_processed_input.json
 ```
 
 ### 5.2 Run Inference
 
 To run the inference,follow the following steps
 ```
-python infer_new.py input_json_path output_json_path model_path
+python infer_new.py custom_processed_input.json output_json_path model_path
 
 ```
 The output json will be written in the path provided as output_json_path.
