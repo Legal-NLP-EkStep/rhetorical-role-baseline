@@ -130,7 +130,7 @@ class SentenceClassificationTrainer:
             results['dev_confusion'] = dev_confusion
             results['labels_dict'] = labels_dict
             results['classification_report']=_
-            torch.save(results,'/home/astha_agarwal/sequential-sentence-classification/results/complete_epoch_wise_new/'+str(epoch)+'_dev.pt')
+
 
             if dev_metrics[self.task.dev_metric] > best_dev_result:
                 if return_best_model:
@@ -144,7 +144,7 @@ class SentenceClassificationTrainer:
                 results['dev_confusion'] = dev_confusion
                 results['labels_dict'] = labels_dict
                 results['classification_report']=_
-                torch.save(results,'/home/astha_agarwal/sequential-sentence-classification/results/complete_epoch_wise_new/'+str(epoch)+'_test.pt')
+
 
                 self.write_results(fold_num, epoch, train_duration, dev_metrics, dev_confusion, test_metrics, test_confusion)
                 self.result_writer.log(
