@@ -5,5 +5,4 @@ google-cloud-storage
 google-api-core
 google-auth
 google-cloud-core
-google-cloud-storage
 huggingface-hub==0.0.12
