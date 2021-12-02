@@ -1,0 +1,9 @@
+spacy==3.1.2
+allennlp
+gradio
+google-cloud-storage
+google-api-core
+google-auth
+google-cloud-core
+google-cloud-storage
+huggingface-hub==0.0.12
