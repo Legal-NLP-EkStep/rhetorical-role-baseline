@@ -1,4 +1,4 @@
-
+import re
 def get_spacy_nlp_pipeline_for_indian_legal_text(model_name="en_core_web_sm", disable=['ner'], punc=[".", "?", "!"],custom_ner = False):
     ########## Creates spacy nlp pipeline for indian legal text. the sentence splitting is done on specific punctuation marks.
     #########This is finalized after multiple experiments comparison. To use all components pass empty list  disable = []
@@ -95,3 +95,43 @@ def attach_short_sentence_boundries_to_next(revised_sentence_boundries, doc_txt)
                     sentences_to_attach_to_next = sentence_boundry
     return concatenated_sentence_boundries
 
+def remove_unwanted_text(text):
+    '''Looks for pattern  which typically starts the main text of jugement.
+    The text before this pattern contains metadata like name of paries, judges and hence removed'''
+    pos_list = []
+    len = 0
+    pos = 0
+    pos_list.append(text.find("JUDGMENT & ORDER"))
+    pos_list.append(text.find("J U D G M E N T"))
+    pos_list.append(text.find("JUDGMENT"))
+    pos_list.append(text.find("O R D E R"))
+    pos_list.append(text.find("ORDER"))
+
+    for i, p in enumerate(pos_list):
+
+        if p != -1:
+            if i == 0:
+                len = 16
+            elif i == 1:
+                len = 15
+            elif i == 2:
+                len = 8
+            elif i == 3:
+                len = 9
+            elif i == 4:
+                len = 5
+            pos = p + len
+            break
+
+    return pos
+
+def split_preamble_judgement(judgment_txt):
+    ###### seperates the preamble and judgement text for all courts. It removes the new lines in between  the sentences.  returns 2 texts
+    preamble_end = remove_unwanted_text(judgment_txt)
+    preamble_removed_txt = judgment_txt[preamble_end:]
+    preamble_txt = judgment_txt[:preamble_end]
+
+    ####### remove the new lines which are not after dot or ?. Assumption is that theses would be in between sentence
+    preamble_removed_txt = re.sub(r'([^.\"\?])\n+ *', r'\1 ',
+                                  preamble_removed_txt)
+    return  preamble_txt,preamble_removed_txt
