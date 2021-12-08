@@ -150,6 +150,8 @@ Automatic Structuring of Court judgements is foundation building block for creat
 BUILD dataset is distribued under the [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/legalcode) license.
 The code is distribued under the Apache 2.0 license.
 
+## Acknowledgements
+We thanks all the law student volunteers and coordinators associated with OpenNyAI for their contribution in data annotation.
 
 ## Appendix:
 Rhetorical Roles Definititions
