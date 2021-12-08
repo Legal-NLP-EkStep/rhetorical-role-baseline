@@ -143,7 +143,8 @@ max_epochs,num_batches etc. can be configured in the  baseline_run.py.To run the
    python baseline_run.py 
   ```
   
-
+## 7. Applications of Rhetorical Roles prediction
+Automatic Structuring of Court judgements is foundation building block for creating other applications like summarization, automatic charge identification etc.  To try rhetorical rolewise summarization on custom judgement text using the baseline model, please refer to [Colab Notebook](https://colab.research.google.com/drive/1FRxgadvvMem8Z_Wtq_-CChk97X2DVdt2#scrollTo=NpdjaPELUkeJ).
 
 ## License
 BUILD dataset is distribued under the [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/legalcode) license.
