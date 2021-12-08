@@ -7,7 +7,7 @@ Indian Court Judgements have an inherent structure which is not explicitly menti
 Though there is no prescription for writing judgement,a judgement text follows an inherent structure. For example, a judgement text would begin with preamble, state facts of the case, courts analysis of the arguments from respondents and petitioners etc. Typical structure of an Indian court judgement is as shown below. The flow is not linear and these roles can appear in any sequence.
 ![Typical Structure of Indian Court Judgements](Rhetorical_Roles_Structure.png)
 The detailed definitions of each of the rhetorical roles is specified in [table](/README.md#appendix). 
-Each of the sentence of the judgement text is marked with one rhetorical role. Task is to predict the rhetorical role of each sentence. 
+In this dataset, each of the sentence of the judgement text is marked with one rhetorical role. Task is to predict the rhetorical role of each sentence. 
 This is sequential text classification because the rhetorical role of each of the sentence is not only dependent on the words of that sentence but also rhetorical roles of previous and next sentence. 
 More details of Rhetorical Roles definitions with examples can be found in [MOOC](https://youtube.com/playlist?list=PL1z52lLL6eWnDnc3Wgfcu6neczrU3fFw0).
 
