@@ -42,11 +42,11 @@ for doc in ground_truth:
         ground_truth_labels.append(ground_truth_label)
         submission_lables.append(submission_label)
 
-micro_precision, micro_recall, micro_f1, _ = precision_recall_fscore_support(ground_truth_labels, submission_lables,
-                                                                             average='micro')
+precision, recall, f1, _ = precision_recall_fscore_support(ground_truth_labels, submission_lables,
+                                                                             average='weighted')
 
 # the scores for the leaderboard must be in a file named "scores.txt"
 # https://github.com/codalab/codalab-competitions/wiki/User_Building-a-Scoring-Program-for-a-Competition#directory-structure-for-submissions
 with open(os.path.join('result.json'), 'w') as output_file:
-    json.dump({"Weighted-F1": micro_f1}, output_file)
+    json.dump({"Weighted-F1": f1}, output_file)
 
