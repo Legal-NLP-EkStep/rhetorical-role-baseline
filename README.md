@@ -132,7 +132,7 @@ For training baseline model on train data, follow steps
   Once the data is in the input data format,the data needs to be tokenized and written in the
   particular folder.This can be done by:
   ```
-  python tokenize_files.py train_json_path
+  python tokenize_files.py train_json_path dev_json_path test_json_path
   ```
   
 ### 6.2 Run Training
