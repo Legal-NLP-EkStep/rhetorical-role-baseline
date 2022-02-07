@@ -116,7 +116,7 @@ def create_summary_with_rr(predictions):
 if __name__ == "__main__":
 
     
-    predictions = json.load(open('/custom_output.json')) ##path to the rhetorical role predicted file
+    predictions = json.load(open('data/predictions.json','r')) ##path to the rhetorical role predicted file
 
     legal_summarizer = SummaryGeneration(model="nsi319/legal-pegasus", tokenizer="nsi319/legal-pegasus")
 
