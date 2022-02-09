@@ -1,5 +1,5 @@
 
-## PEGASUS for legal document summarization
+## Abstractive Summarization of Legal docs using rhetorical roles
 **legal-pegasus** is a finetuned version of ([**google/pegasus-cnn_dailymail**](https://huggingface.co/google/pegasus-cnn_dailymail)) for the **legal domain**, trained to perform **abstractive summarization** task. The maximum length of input sequence is 1024 tokens.
 
 ## Setup
