@@ -15,7 +15,7 @@ The test data consisted of 50 documents randomly selected from the
 Law Briefs dataset.These legal documents come annotated with summaries
 (abstractive summaries of the document) by expert editors.These summaries behaved as the gold standard summary for these judgments .
 
-##Generating summaries on your own data
+## Generating summaries on your own data
 
 
  To generate summaries,please create predictions file using the rhetorical role model.Then 
@@ -36,4 +36,4 @@ where:
 
 ```<judgment_summary_mapping>:path to the json consisting of judgment and gold standard summaries```
 
-##Evaluation results
+## Evaluation results
