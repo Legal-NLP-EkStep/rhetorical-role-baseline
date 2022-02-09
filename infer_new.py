@@ -1,31 +1,30 @@
-from tqdm import tqdm
 import models
 import json
-import os
-
-
 import sys
-from dataset_reader import DocumentsDataset
-from utils import get_device
-from task import pubmed_task
-from models import BertHSLN
-from eval import eval_model, clear_and_map_padded_values
+
 import torch
 from transformers import BertTokenizer
-from utils import tensor_dict_to_gpu, tensor_dict_to_cpu
+
+import models
+from eval import eval_model
+from models import BertHSLN
+from task import pubmed_task
+from utils import get_device
+
 
 def create_task(create_func):
     return create_func(train_batch_size=config["batch_size"], max_docs=MAX_DOCS)
 
-def infer(model_path,max_docs,prediction_output_json_path):
+
+def infer(model_path, max_docs, prediction_output_json_path, device):
     ######### This function loads the model from given model path and predefined data. It then predicts the rhetorical roles and returns
     task = create_task(pubmed_task)
     model = getattr(models, config["model"])(config, [task]).to(device)
     model.load_state_dict(torch.load(model_path))
-    
-    folds =task.get_folds()
+
+    folds = task.get_folds()
     test_batches = folds[0].test
-    metrics, confusion,labels_dict, class_report = eval_model(model,test_batches, device, task)
+    metrics, confusion, labels_dict, class_report = eval_model(model, test_batches, device, task)
 
     return labels_dict
 def write_in_hsln_format(input_json,hsln_format_txt_dirpath,tokenizer):
@@ -96,8 +95,8 @@ if __name__=="__main__":
     
     hsln_format_txt_dirpath ='datasets/pubmed-20k'
     write_in_hsln_format(input_dir,hsln_format_txt_dirpath,tokenizer)
-    filename_sent_boundries =json.load(open(hsln_format_txt_dirpath+'/sentece_boundries.json'))
-    predictions = infer(model_path,MAX_DOCS,prediction_output_json_path)
+    filename_sent_boundries = json.load(open(hsln_format_txt_dirpath + '/sentece_boundries.json'))
+    predictions = infer(model_path, MAX_DOCS, prediction_output_json_path, device)
     
     ##### write the output in format needed by revision script
     for doc_name,predicted_labels in zip(predictions['doc_names'],predictions['docwise_y_predicted']):
