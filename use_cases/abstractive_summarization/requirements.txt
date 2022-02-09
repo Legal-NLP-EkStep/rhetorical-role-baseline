@@ -1,0 +1,7 @@
+sentencepiece
+transformers
+numpy
+rouge-score
+torch
+pandas
+protobuf

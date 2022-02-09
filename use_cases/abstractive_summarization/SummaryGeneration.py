@@ -100,18 +100,3 @@ class SummaryGeneration:
 
         return output
 
-
-if __name__ == "__main__":
-    import json
-    from pathlib import Path
-    from rouge_metric import rouge
-
-    judgements = []  #Add sample judgement
-    labels = []      #Add sample summary
-
-    legal_summarizer = SummaryGeneration(model="nsi319/legal-pegasus", tokenizer="nsi319/legal-pegasus")
-    generated_summaries = legal_summarizer.generate(judgements, token_max_length=1024)
-    generated_summaries = [summary["level_1_summary"] for summary in generated_summaries]
-    rouge_scores = rouge(labels, generated_summaries)
-    logger(
-        f"Legal Pegasus socores:\nRouge-1 - {rouge_scores['eval_rouge-1']}\nRouge-2 - {rouge_scores['eval_rouge-2']}\nRouge-L - {rouge_scores['eval_rouge-L']}\n")

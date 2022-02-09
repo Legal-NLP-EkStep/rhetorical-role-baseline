@@ -1,9 +1,9 @@
-# ToDo: Add code to process judgement in rhetorical roles and generate summaries
-# ToDo: Add evaluation data to generate results
-
+from rouge_score import rouge_scorer
+from tqdm import tqdm
+import json
 from SummaryGeneration import SummaryGeneration
 import re
-
+import sys
 import pandas as pd
 
 
@@ -66,10 +66,12 @@ def remove_unwanted_text(text):
 
 def create_summary_with_rr(predictions):
     final_summaries_rr = []
-
+    final_summaries_normal = []
+    rheotrical_roles_to_summarize = ['FAC', 'RLC', 'ISSUE', 'ARG_PETITIONER', 'ARG_RESPONDENT', 'ANALYSIS',
+                                     'PRECEDENT_RELIED', 'PRECEDENT_NOT_RELIED', 'STA', 'RATIO', 'RPC']
     for index, prediction in enumerate(predictions):
-        inp = prediction['data']
 
+        inp = prediction['data']
         preamble_txt, preamble_removed_txt = split_preamble_judgement(inp['text'])
         cleaned_text = preamble_txt + preamble_removed_txt
 
@@ -84,6 +86,14 @@ def create_summary_with_rr(predictions):
             if i < len(annotation_list) - 1 and annotation_list[i + 1]['value']['start'] > annotation['value']['end']:
                 sent_tags.append(
                     (cleaned_text[annotation['value']['end']:annotation_list[i + 1]['value']['start']], None))
+
+        ##### create summary without rhetorical role
+        normal_summ_dict={}
+        normal_summ_dict['id'] = id
+
+        normal_generated_summaries = legal_summarizer.generate(cleaned_text, token_max_length=1024)
+        normal_summ_dict['summary_normal'] = normal_generated_summaries[0]['level_1_summary']
+        final_summaries_normal.append(normal_summ_dict)
 
         ##### create summary for each rhetorical role
 
@@ -100,7 +110,7 @@ def create_summary_with_rr(predictions):
                 generated_summaries_dict[rhet_role] = {"summary": rhet_text, "is_summarized": False}
         final_summary = ''
 
-        for rhetorical_role in list(rhetorical_rolewise_text.keys()):
+        for rhetorical_role in rheotrical_roles_to_summarize:
             if rhetorical_role == 'NONE':
                 continue
             if generated_summaries_dict.get(rhetorical_role) is not None:
@@ -110,18 +120,61 @@ def create_summary_with_rr(predictions):
 
         final_summaries_rr.append(summ_dict)
 
-    return final_summaries_rr
+    return final_summaries_rr,final_summaries_normal
+
+
+
+def rouge(label_sent: list, pred_sent: list) -> dict:
+    """Approximate ROUGE scores, always run externally for final scores."""
+    individual_rouges=[]
+    scorer = rouge_scorer.RougeScorer(
+        ["rouge1", "rouge2", "rougeLsum"],
+        use_stemmer=True)
+    r1, r2, rl = 0.0, 0.0, 0.0
+    for ls, ps in tqdm(zip(label_sent, pred_sent), desc=f"Calculating scores on {len(label_sent)} labels",
+                       total=len(label_sent)):
+        score = scorer.score(ls, ps)
+        individual_rouges.append( {"eval_rouge-1":  score["rouge1"],
+              "eval_rouge-2":  score["rouge2"],
+              "eval_rouge-L":score["rougeLsum"]})
+        r1 += score["rouge1"].fmeasure
+        r2 += score["rouge2"].fmeasure
+        rl += score["rougeLsum"].fmeasure
+    result = {"eval_rouge-1": r1 / len(label_sent),
+              "eval_rouge-2": r2 / len(label_sent),
+              "eval_rouge-L": rl / len(label_sent)}
+    return result
 
 
 if __name__ == "__main__":
-
-    
-    predictions = json.load(open('data/predictions.json','r')) ##path to the rhetorical role predicted file
+    arguments= sys.argv
+    predictions=arguments[1]
+    output_path=arguments[2]
 
     legal_summarizer = SummaryGeneration(model="nsi319/legal-pegasus", tokenizer="nsi319/legal-pegasus")
+    rr_summaries,normal_summaries = create_summary_with_rr(json.load(open(predictions,'r')))
+    json.dump(rr_summaries,open(output_path+'/rr_summaries.json','w+'))
+    json.dump(normal_summaries, open(output_path + '/normal_summaries.json', 'w+'))
+  
+    if len(arguments)==4:
+        summary_judgment_mapping=json.load(open(arguments[3],'r'))
+        original_summary=[]
+        predicted_summary_rr=[]
+        predicted_summary_normal=[]
 
-    rr_summaries = create_summary_with_rr(predictions)
-    json.dump(rr_summaries,open('rhetorical_role_summaries','w+'))
+    
+        for summary_judgment in summary_judgment_mapping:
+            id=summary_judgment['id']
+            original_summary.append(summary_judgment['original_summary'])
+            rr_summary=[summary['summary_rr'] for summary in rr_summaries if summary['id']==id][0]
+            normal_summary=[summary['summary_normal'] for summary in normal_summaries if summary['id']==id][0]
+            predicted_summary_rr.append(rr_summary)
+            predicted_summary_normal.append(normal_summary)
+    
+        rouge_score_rr=rouge(original_summary,predicted_summary_rr)
+        rouge_score_normal=rouge(original_summary,predicted_summary_normal)
+        print('Rouge_score for Rhetorical Role summaries is :'+str(rouge_score_rr))
+        print('Rouge_score for normal summaries is :' + str(rouge_score_normal))
 
 
 
