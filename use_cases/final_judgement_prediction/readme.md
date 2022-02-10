@@ -4,7 +4,7 @@ This code base contains files for predicting and explaining the court judgments 
 
 ## CJPE data
 
-For dataset you can conatact authors of ACL-IJCNLP 2021 paper "ILDC for CJPE: Indian Legal Documents Corpus for Court
+For dataset you can contact authors of ACL-IJCNLP 2021 paper "ILDC for CJPE: Indian Legal Documents Corpus for Court
 Judgment Prediction and Explanation" or visit their [github repo](https://github.com/Exploration-Lab/CJPE).
 
 ## Processing raw data
