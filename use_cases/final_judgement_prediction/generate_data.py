@@ -94,6 +94,22 @@ def generate_final_csv(csv_path='./Data/ILDC_Single/ILDC_single.csv',
     for key in rhetorical_roles:
         df[key] = new_colomns[key]
 
+    input_text = []
+    for text, ratio, rpc in zip(df['text'].to_list(), df['RATIO'].to_list(), df['RPC'].to_list()):
+        if not ratio:
+            ratio = ''
+        else:
+            ratio = ratio.split('\n')
+        if not rpc:
+            rpc = ''
+        else:
+            rpc = rpc.split('\n')
+        for ratio_line in ratio:
+            text = text.replace(ratio_line, '')
+        for rpc_line in rpc:
+            text = text.replace(rpc_line, '')
+        input_text.append(text)
+    df['input_text'] = input_text
     df.to_csv("ILDC_single_new_with_rhetorical_roles", index=False)
 
 
