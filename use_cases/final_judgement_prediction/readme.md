@@ -16,10 +16,10 @@ file and create new processed data with text separated based on rhetorical roles
 Run:
 
 ```
-python generate_data.py
+python generate_data.py ./Data/ILDC_Single/ILDC_single.csv rhetorical_role_model.pt
 ```
 
-Note: Do change the path for rhetorical role model and raw data file in generate_data.py
+Note: Do change the path for rhetorical role model and raw data file
 
 ## Generating results
 
