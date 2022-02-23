@@ -75,7 +75,7 @@ def art_task_small(train_batch_size, max_docs):
 def pubmed_task(train_batch_size, max_docs, data_folder="datasets/"):
     return Task(PUBMED_TASK, PUBMED_LABELS,
                 train_batch_size, 1, max_docs, short_name="PMD", labels_pres=PUBMED_LABELS_PRES,
-                data_folder="datasets/")
+                data_folder=data_folder)
 
 
 def pubmed_task_small(train_batch_size, max_docs):
