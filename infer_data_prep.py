@@ -1,26 +1,29 @@
-from tqdm import tqdm
-from transformers import BertTokenizer
 import json
 import os
+import sys
+
+import spacy
+from tqdm import tqdm
+from transformers import BertTokenizer
+
 from data_prep import attach_short_sentence_boundries_to_next
 from data_prep import get_spacy_nlp_pipeline_for_indian_legal_text
-import spacy
-import sys
+
 spacy.prefer_gpu()
 
 
-def split_into_sentences_tokenize_write(prediction_input_ls_format,custom_processed_data_path,nlp):
+def split_into_sentences_tokenize_write(prediction_input_ls_format, custom_processed_data_path, nlp,
+                                        hsln_format_txt_dirpath='datasets/pubmed-20k'):
     ########## This function accepts the input files in LS format, creates tokens and writes them with label as "NONE" to text file
-    hsln_format_txt_dirpath ='datasets/pubmed-20k'
     if not os.path.exists(hsln_format_txt_dirpath):
         os.makedirs(hsln_format_txt_dirpath)
-    output_json=[]
-    filename_sent_boundries = {} ###### key is the filename and value is dict containing sentence spans {"abc.txt":{"sentence_span":[(1,10),(11,20),...]} , "pqr.txt":{...},...}
+    output_json = []
+    filename_sent_boundries = {}  ###### key is the filename and value is dict containing sentence spans {"abc.txt":{"sentence_span":[(1,10),(11,20),...]} , "pqr.txt":{...},...}
     for adjudicated_doc in tqdm(prediction_input_ls_format):
 
         doc_txt = adjudicated_doc['data']['text']
         file_name = adjudicated_doc['id']
-        if filename_sent_boundries.get(file_name) is None: ##### Ignore if the file is already present
+        if filename_sent_boundries.get(file_name) is None:  ##### Ignore if the file is already present
 
             nlp_doc = nlp(doc_txt)
             sentence_boundries = [(sent.start_char,sent.end_char) for sent in  nlp_doc.sents]

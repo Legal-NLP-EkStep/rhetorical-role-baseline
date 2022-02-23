@@ -1,16 +1,16 @@
+import os
+
+import numpy as np
 from sklearn.model_selection import KFold, train_test_split
 
 from batch_creator import BatchCreator
 from dataset_reader import DocumentsDataset
-import torch
-import os
-import numpy as np
 from utils import log
 
-
-
-PUBMED_LABELS = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
-PUBMED_LABELS_PRES = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
+PUBMED_LABELS = ["DEFAULT", 'mask', "NONE", "PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT", "ARG_PETITIONER", "ANALYSIS",
+                 "PRE_RELIED", "PRE_NOT_RELIED", "STA", "RLC", "RPC", "RATIO"]
+PUBMED_LABELS_PRES = ["DEFAULT", 'mask', "NONE", "PREAMBLE", "FAC", "ISSUE", "ARG_RESPONDENT", "ARG_PETITIONER",
+                      "ANALYSIS", "PRE_RELIED", "PRE_NOT_RELIED", "STA", "RLC", "RPC", "RATIO"]
 
 #
 #
@@ -28,7 +28,8 @@ PUBMED_LABELS_PRES = ["DEFAULT",'mask',"NONE","PREAMBLE", "FAC", "ISSUE", "ARG_R
 # GEN_LABELS_PRES = GEN_LABELS
 
 
-GEN_LABELS = ["PREAMBLE","NONE", "FAC", "ISSUE", "ARG_RESPONDENT","ARG_PETITIONER", "ANALYSIS", "PRE_RELIED","PRE_NOT_RELIED","STA","RLC", "RPC","RATIO"]
+GEN_LABELS = ["PREAMBLE", "NONE", "FAC", "ISSUE", "ARG_RESPONDENT", "ARG_PETITIONER", "ANALYSIS", "PRE_RELIED",
+              "PRE_NOT_RELIED", "STA", "RLC", "RPC", "RATIO"]
 # GEN_LABELS = ["mask", "Background", "Problem", "Contribution", "Method", "Result", "Conclusion", "Future Work"]
 GEN_LABELS_PRES = GEN_LABELS
 
@@ -45,41 +46,48 @@ GEN_ART_TASK = "ART_generic"
 
 def tgeneric_task(task_name, train_batch_size, max_docs):
     return Task(task_name, GEN_LABELS,
-                train_batch_size, 1,  max_docs, short_name=task_name,
+                train_batch_size, 1, max_docs, short_name=task_name,
                 labels_pres=GEN_LABELS_PRES)
+
 
 def dri_task(train_batch_size, max_docs):
     # 10-fold cross validation
     return Task(DRI_TASK, DRI_LABELS,
-                 train_batch_size, 10,  max_docs, short_name="DRI",
+                train_batch_size, 10, max_docs, short_name="DRI",
                 labels_pres=DRI_LABELS_PRES)
+
 
 def art_task(train_batch_size, max_docs):
     # 9-fold cross validation, Accuracy-Metric
     return Task(ART_TASK, ART_LABELS,
-                 train_batch_size, 9,  max_docs,
+                train_batch_size, 9, max_docs,
                 dev_metric="acc", short_name="ART", labels_pres=ART_LABELS_PRES)
 
-def art_task_small(train_batch_size,  max_docs):
+
+def art_task_small(train_batch_size, max_docs):
     # 9-fold cross validation, Accuracy-Metric
     return Task(ART_TASK + "_small", ART_LABELS,
-                 train_batch_size,  9,  max_docs,
-                dev_metric="acc", portion_training_data=1.0/3.0,
+                train_batch_size, 9, max_docs,
+                dev_metric="acc", portion_training_data=1.0 / 3.0,
                 task_folder_name=ART_TASK, short_name="mART", labels_pres=ART_LABELS_PRES)
 
-def pubmed_task(train_batch_size,  max_docs):
+
+def pubmed_task(train_batch_size, max_docs, data_folder="datasets/"):
     return Task(PUBMED_TASK, PUBMED_LABELS,
-                 train_batch_size,  1,  max_docs, short_name="PMD", labels_pres=PUBMED_LABELS_PRES)
+                train_batch_size, 1, max_docs, short_name="PMD", labels_pres=PUBMED_LABELS_PRES,
+                data_folder="datasets/")
 
-def pubmed_task_small(train_batch_size,  max_docs):
+
+def pubmed_task_small(train_batch_size, max_docs):
     return Task(PUBMED_TASK + "_small", PUBMED_LABELS,
-                 train_batch_size,  1,  max_docs,
-                portion_training_data=1.0/20.0, task_folder_name=PUBMED_TASK, short_name="mPMD", labels_pres=PUBMED_LABELS_PRES)
+                train_batch_size, 1, max_docs,
+                portion_training_data=1.0 / 20.0, task_folder_name=PUBMED_TASK, short_name="mPMD",
+                labels_pres=PUBMED_LABELS_PRES)
 
 
-def nicta_task(train_batch_size,  max_docs):
+def nicta_task(train_batch_size, max_docs):
     return Task(NICTA_TASK, NICTA_LABELS,
-                 train_batch_size,  1,  max_docs, short_name="NIC", labels_pres=NICTA_LABELS_PRES)
+                train_batch_size, 1, max_docs, short_name="NIC", labels_pres=NICTA_LABELS_PRES)
 
 
 class Fold:
@@ -90,7 +98,7 @@ class Fold:
 
 
 class Task:
-    def __init__(self, task_name, labels, train_batch_size,  num_fols,  max_docs = -1,
+    def __init__(self, task_name, labels, train_batch_size, num_fols, max_docs=-1,
                  dev_metric="weighted-f1", portion_training_data=1.0,
                  task_folder_name=None, short_name=None,
                  labels_pres=None,
@@ -111,11 +119,11 @@ class Task:
     def get_labels_pres_titled(self):
         '''Labels ordered in presentation-order titled. '''
         return [l.title() for l in self.labels_pres]
-        
+
     def get_labels_titled(self):
         '''Labels titled. '''
         return [l.title() for l in self.labels]
-        
+
     def _get_batches(self, examples):
         ds_builder = BatchCreator(
             examples,
@@ -138,7 +146,8 @@ class Task:
 
         log("Loading tokenized data...")
 
-        train_examples = DocumentsDataset(os.path.join(self.data_dir, f"train_{file_suffix}.txt"), max_docs=self.max_docs)
+        train_examples = DocumentsDataset(os.path.join(self.data_dir, f"train_{file_suffix}.txt"),
+                                          max_docs=self.max_docs)
         dev_examples = DocumentsDataset(os.path.join(self.data_dir, f"dev_{file_suffix}.txt"), max_docs=self.max_docs)
         test_examples = DocumentsDataset(os.path.join(self.data_dir, f"test_{file_suffix}.txt"), max_docs=self.max_docs)
 
@@ -185,7 +194,7 @@ class Task:
             for train_index, test_index in kf.split(full_examples):
                 train_and_dev = full_examples[train_index]
                 test = full_examples[test_index]
-                train, dev = train_test_split(train_and_dev, test_size=1.0/self.num_folds, shuffle=False)
+                train, dev = train_test_split(train_and_dev, test_size=1.0 / self.num_folds, shuffle=False)
 
                 train = self.truncate_train_examples(train)
 
@@ -224,7 +233,6 @@ class Task:
 
         return counts
 
-
     def get_test_label_counts(self, fold_num):
         fold_num = fold_num % self.num_folds
         _, _, test = self.get_folds_examples()[fold_num]
@@ -235,5 +243,3 @@ class Task:
                 label_id = self.labels.index(l)
                 counts[label_id] += 1
         return counts
-
-
