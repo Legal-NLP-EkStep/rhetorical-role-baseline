@@ -5,7 +5,10 @@ def get_spacy_nlp_pipeline_for_indian_legal_text(model_name="en_core_web_sm", di
 
     import spacy
     from spacy.pipeline import Sentencizer
-
+    try:
+        spacy.prefer_gpu()
+    except:
+        pass
     nlp = spacy.load(model_name, disable=disable)
     nlp.max_length = 30000000
 
