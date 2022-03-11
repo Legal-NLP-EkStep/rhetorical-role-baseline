@@ -1,7 +1,7 @@
 import json
 import urllib
 from urllib.request import Request, urlopen
-
+import re
 from bs4 import BeautifulSoup as soup
 
 
@@ -9,7 +9,18 @@ def get_text_from_indiankanoon_url(url):
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     webpage = urlopen(req, timeout=10).read()
     page_soup = soup(webpage, "html.parser")
-    return page_soup.text.strip()
+    judgment_txt = page_soup.text
+    ########### Remove the text before start of main judgment
+    judgement_start_pattern = 'Free for one month and pay only if you like it.'
+    if judgment_txt.find(judgement_start_pattern) != -1:
+        judgment_txt = judgment_txt.split(judgement_start_pattern,1)[1]
+    judgment_txt = judgment_txt.strip().split('\n',2)[2] ##### remove first two lines which tell court name & case
+
+    ########### Remove the extra information added by IndianKanoon if it  exists
+    judgment_txt = re.sub(r'^Equivalent citations\:.*\n','',judgment_txt)
+    judgment_txt = re.sub(r'^Author\:.*\n', '', judgment_txt)
+    judgment_txt = re.sub(r'^Bench\:.*\n', '', judgment_txt)
+    return judgment_txt.strip()
 
 
 def get_predicted_rhetorical_roles(ip, txt, inference_token):
