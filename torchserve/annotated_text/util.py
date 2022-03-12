@@ -81,7 +81,7 @@ def annotation(body, label="", background=None, color=None, **style):
                 **style,
             ))(
 
-            html.escape(body),
+            body,
 
             span(
                 style=styles(
@@ -93,7 +93,7 @@ def annotation(body, label="", background=None, color=None, **style):
                         font_size=em(0.67),
                         opacity=0.5,
                     ))(
-                    html.escape(label),
+                    label,
                 ),
             ),
         )
