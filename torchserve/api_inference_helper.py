@@ -35,6 +35,27 @@ def get_predicted_rhetorical_roles(ip, txt, inference_token):
     return json_data
 
 
+def get_predicted_extractive_summary(ip, rhetorical_roles):
+    rr_api_url = f'http://{ip}:8080/predictions/ExtractiveSummarizer/'
+    body = rhetorical_roles
+    req = urllib.request.Request(rr_api_url)
+    req.add_header('Content-Type', 'application/json; charset=utf-8')
+    jsondata = json.dumps(body)
+    jsondataasbytes = jsondata.encode('utf-8')
+    response = urllib.request.urlopen(req, jsondataasbytes).read()
+    json_data = json.loads(response)
+    return json_data
+
+
+def check_api_health(ip_address):
+    api_url = f'http://{ip_address}:8080/ping'
+    req = urllib.request.Request(api_url)
+    if json.load(urllib.request.urlopen(req))['status'] == 'Healthy':
+        return True
+    else:
+        return False
+
+
 def get_rhetorical_roles_from_indiankanoon_url(ik_url, inference_token, vm_ip_address):
     judgment_txt = get_text_from_indiankanoon_url(ik_url)
     predicted_rr = get_predicted_rhetorical_roles(vm_ip_address, judgment_txt, inference_token)
@@ -42,9 +63,20 @@ def get_rhetorical_roles_from_indiankanoon_url(ik_url, inference_token, vm_ip_ad
 
 
 if __name__ == "__main__":
-    inference_token = '6977a1d9ff0e4c5cb285f210ddb4ff49'
-    vm_ip_address = '34.136.53.140'
-    output = get_rhetorical_roles_from_indiankanoon_url('https://indiankanoon.org/doc/137175626/',
-                                                        inference_token=inference_token, vm_ip_address=vm_ip_address)
-    with open("output.json", 'w') as f:
-        json.dump(output, f)
+    inference_token = ''
+    vm_ip_address = ''
+    if check_api_health(vm_ip_address):
+        rhetorical_roles_output = get_rhetorical_roles_from_indiankanoon_url('https://indiankanoon.org/doc/103570654',
+                                                                             inference_token=inference_token,
+                                                                             vm_ip_address=vm_ip_address)
+        extractive_summarizer_output = get_predicted_extractive_summary(vm_ip_address, rhetorical_roles_output)
+
+        with open(
+                "/Users/amantiwari/Projects/NLP_LEGAL/rhetorical-role-baseline/torchserve/predictor/rhetorical_roles_prediction_output.json",
+                'w') as f:
+            json.dump(rhetorical_roles_output, f, indent=4)
+
+        with open(
+                "/Users/amantiwari/Projects/NLP_LEGAL/rhetorical-role-baseline/torchserve/predictor/extractive_summarizer_prediction_output.json",
+                'w') as f:
+            json.dump(extractive_summarizer_output, f, indent=4)
