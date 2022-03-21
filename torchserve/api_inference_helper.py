@@ -1,7 +1,8 @@
 import json
+import re
 import urllib
 from urllib.request import Request, urlopen
-import re
+
 from bs4 import BeautifulSoup as soup
 
 
@@ -50,7 +51,12 @@ def get_predicted_extractive_summary(ip, rhetorical_roles):
 def check_api_health(ip_address):
     api_url = f'http://{ip_address}:8080/ping'
     req = urllib.request.Request(api_url)
-    if json.load(urllib.request.urlopen(req))['status'] == 'Healthy':
+    try:
+        status = json.load(urllib.request.urlopen(req))['status']
+    except:
+        status = 'UnHealthy'
+
+    if status == 'Healthy':
         return True
     else:
         return False
