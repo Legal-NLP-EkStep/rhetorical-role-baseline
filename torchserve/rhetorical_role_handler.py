@@ -150,7 +150,7 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         if type(sentences) is not str or not sentences:
             raise PredictionException("Missing text in input for processing", 516)
 
-        logger.info("Received text: '%s'", sentences)
+        # logger.info("Received text: '%s'", sentences)
         input_ls_format = [{'id': id, 'data': {'text': sentences}}]
 
         # Tokenize the texts and write files
