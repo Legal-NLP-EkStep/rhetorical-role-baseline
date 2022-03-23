@@ -17,6 +17,7 @@ def split_into_sentences_tokenize_write(prediction_input_ls_format, custom_proce
     ########## This function accepts the input files in LS format, creates tokens and writes them with label as "NONE" to text file
     if not os.path.exists(hsln_format_txt_dirpath):
         os.makedirs(hsln_format_txt_dirpath)
+    max_length = 10000
     output_json = []
     filename_sent_boundries = {}  ###### key is the filename and value is dict containing sentence spans {"abc.txt":{"sentence_span":[(1,10),(11,20),...]} , "pqr.txt":{...},...}
     for adjudicated_doc in tqdm(prediction_input_ls_format):
@@ -24,15 +25,20 @@ def split_into_sentences_tokenize_write(prediction_input_ls_format, custom_proce
         doc_txt = adjudicated_doc['data']['text']
         file_name = adjudicated_doc['id']
         if filename_sent_boundries.get(file_name) is None:  ##### Ignore if the file is already present
-
-            nlp_doc = nlp(doc_txt)
-            sentence_boundries = [(sent.start_char,sent.end_char) for sent in  nlp_doc.sents]
-            revised_sentence_boundries = attach_short_sentence_boundries_to_next(sentence_boundries,doc_txt)
+            tokens = nlp.tokenizer(doc_txt)
+            if len(tokens) > max_length:
+                chunks = [tokens[i:i + max_length] for i in range(0, len(tokens), max_length)]
+                nlp_docs = [nlp(i.text) for i in chunks]
+                nlp_doc = spacy.tokens.Doc.from_docs(nlp_docs)
+            else:
+                nlp_doc = nlp(doc_txt)
+            sentence_boundries = [(sent.start_char, sent.end_char) for sent in nlp_doc.sents]
+            revised_sentence_boundries = attach_short_sentence_boundries_to_next(sentence_boundries, doc_txt)
             adjudicated_doc['annotations'] = []
             adjudicated_doc['annotations'].append({})
             adjudicated_doc['annotations'][0]['result'] = []
 
-            filename_sent_boundries[file_name] = {"sentence_span":[]}
+            filename_sent_boundries[file_name] = {"sentence_span": []}
             for sentence_boundry in revised_sentence_boundries:
                 sentence_txt = doc_txt[sentence_boundry[0]:sentence_boundry[1]]
 
