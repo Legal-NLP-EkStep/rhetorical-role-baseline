@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 import uuid
 
 import torch
@@ -9,7 +10,7 @@ from ts.torch_handler.base_handler import BaseHandler
 from ts.utils.util import PredictionException
 
 import models
-from data_prep import get_spacy_nlp_pipeline_for_indian_legal_text
+from data_prep import get_spacy_nlp_pipeline_for_indian_legal_text, seperate_and_clean_preamble
 from database_utils import PostgresDatabase
 from eval import eval_model
 from infer_data_prep import split_into_sentences_tokenize_write
@@ -150,8 +151,14 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         if type(sentences) is not str or not sentences:
             raise PredictionException("Missing text in input for processing", 516)
 
+        # clean judgement
+        preamble_text, preamble_end = seperate_and_clean_preamble(sentences, self.nlp)
+        judgement_text = sentences[preamble_end:]
+        judgement_text = re.sub(r'([^.\"\?])\n+ *', r'\1 ', judgement_text)
         # logger.info("Received text: '%s'", sentences)
-        input_ls_format = [{'id': id, 'data': {'text': sentences}}]
+        input_ls_format = [
+            {'id': id, 'data': {'preamble_text': preamble_text, 'judgement_text': judgement_text,
+                                'text': preamble_text + judgement_text}}]
 
         # Tokenize the texts and write files
         split_into_sentences_tokenize_write(input_ls_format, os.path.join(self.model_dir, 'input_to_hsln.json'),

@@ -23,15 +23,21 @@ def split_into_sentences_tokenize_write(prediction_input_ls_format, custom_proce
     for adjudicated_doc in tqdm(prediction_input_ls_format):
 
         doc_txt = adjudicated_doc['data']['text']
+        preamble_text = adjudicated_doc['data']['preamble_text']
+        judgement_text = adjudicated_doc['data']['judgement_text']
         file_name = adjudicated_doc['id']
+
         if filename_sent_boundries.get(file_name) is None:  ##### Ignore if the file is already present
-            tokens = nlp.tokenizer(doc_txt)
+            tokens = nlp.tokenizer(judgement_text)
             if len(tokens) > max_length:
                 chunks = [tokens[i:i + max_length] for i in range(0, len(tokens), max_length)]
                 nlp_docs = [nlp(i.text) for i in tqdm(chunks, desc='Processing NLP chunks')]
+                nlp_docs = [nlp(preamble_text)] + nlp_docs
                 nlp_doc = spacy.tokens.Doc.from_docs(nlp_docs)
             else:
-                nlp_doc = nlp(doc_txt)
+                nlp_preamble_doc = nlp(preamble_text)
+                nlp_judgement_doc = nlp(judgement_text)
+                nlp_doc = spacy.tokens.Doc.from_docs([nlp_preamble_doc, nlp_judgement_doc])
             sentence_boundries = [(sent.start_char, sent.end_char) for sent in nlp_doc.sents]
             revised_sentence_boundries = attach_short_sentence_boundries_to_next(sentence_boundries, doc_txt)
             adjudicated_doc['annotations'] = []
