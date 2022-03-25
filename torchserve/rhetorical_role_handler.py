@@ -10,8 +10,8 @@ from ts.torch_handler.base_handler import BaseHandler
 from ts.utils.util import PredictionException
 
 import models
-from data_prep import get_spacy_nlp_pipeline_for_indian_legal_text, seperate_and_clean_preamble
-from database_utils import PostgresDatabase
+from data_prep import get_spacy_nlp_pipeline_for_indian_legal_text, seperate_and_clean_preamble, \
+    get_judgment_text_pipeline, get_spacy_nlp_pipeline_for_preamble
 from eval import eval_model
 from infer_data_prep import split_into_sentences_tokenize_write
 from infer_new import write_in_hsln_format
@@ -57,11 +57,6 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         properties = ctx.system_properties
         self.model_dir = properties.get("model_dir")
         self.device = torch.device("cuda:" + str(properties.get("gpu_id")) if torch.cuda.is_available() else "cpu")
-        try:
-            self.db_obj = PostgresDatabase()
-        except:
-            self.db_obj = None
-
         # Read model serialize/pt file
         serialized_file = self.manifest["model"]["serializedFile"]
         model_pt_path = os.path.join(self.model_dir, serialized_file)
@@ -90,23 +85,21 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         # set up nlp pipeline
         self.nlp = get_spacy_nlp_pipeline_for_indian_legal_text(model_name="en_core_web_trf",
                                                                 disable=["attribute_ruler", "lemmatizer", 'ner'])
+
+        self.nlp_judgment = get_judgment_text_pipeline()
+
+        preamble_entities_list = ['COURT', 'PETITIONER', 'RESPONDENT', 'LAWYER', 'JUDGE']
+        for preamble_entity in preamble_entities_list:
+            self.nlp_judgment.vocab.strings.add(preamble_entity)
+
+        ###### Pipeline for preamble
+        self.nlp_preamble = get_spacy_nlp_pipeline_for_preamble(self.nlp_judgment.vocab)
+        self.nlp_preamble.add_pipe("extract_preamble_entities", after="lemmatizer")
+        del self.nlp_judgment
+        import gc
+        gc.collect()
         self.initialized = True
 
-    def check_token_authentication_and_update(self, token):
-        fetched_data = self.db_obj.fetch()
-        count = [int(i[1]) for i in fetched_data if str(i[0]) == token]
-        quota_used = [int(i[2]) for i in fetched_data if str(i[0]) == token]
-        if not count:
-            return False
-        else:
-            count = count[0]
-            quota_used = quota_used[0]
-            if quota_used < count:
-                quota_used = quota_used + 1
-                self.db_obj.update_request_count(token=token, request_count=count, quota_used=quota_used)
-                return True
-            else:
-                return False
 
     def preprocess(self, data):
         """ Preprocessing input request by tokenizing
@@ -114,12 +107,6 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         """
 
         # convert incoming data into label studio format
-        def check_token_validity(token):
-            try:
-                uid = uuid.UUID(token)
-                return True
-            except:
-                return False
 
         id = None
         text = ""
@@ -131,18 +118,9 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         if text is not None:
             text = recieved_data.get('text')
             id = recieved_data.get('id')
-            token = recieved_data.get('inference_token')
         if id is None:
             uid = uuid.uuid4()
             id = "RhetoricalRoleInference_" + str(uid.hex)
-        if token is None:
-            raise PredictionException("Missing Inference token, Please provide token to use service", 518)
-
-        if not check_token_validity(token):
-            raise PredictionException("Wrong Inference token, Please provide valid token to use service", 519)
-
-        if not self.check_token_authentication_and_update(token=token):
-            raise PredictionException("Token reached maximum usability, contact support!!", 520)
 
         try:
             sentences = text.decode('utf-8')
@@ -152,13 +130,13 @@ class RhetoricalRolePredictorHandler(BaseHandler):
             raise PredictionException("Missing text in input for processing", 516)
 
         # clean judgement
-        preamble_text, preamble_end = seperate_and_clean_preamble(sentences, self.nlp)
+        preamble_text, preamble_end = seperate_and_clean_preamble(sentences, self.nlp_preamble)
         judgement_text = sentences[preamble_end:]
         judgement_text = re.sub(r'([^.\"\?])\n+ *', r'\1 ', judgement_text)
         # logger.info("Received text: '%s'", sentences)
         input_ls_format = [
             {'id': id, 'data': {'preamble_text': preamble_text, 'judgement_text': judgement_text,
-                                'text': preamble_text + judgement_text}}]
+                                'text': preamble_text + " " + judgement_text}}]
 
         # Tokenize the texts and write files
         split_into_sentences_tokenize_write(input_ls_format, os.path.join(self.model_dir, 'input_to_hsln.json'),
