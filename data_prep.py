@@ -52,9 +52,12 @@ class mySentencizer(Sentencizer):
             guesses.append(doc_guesses)
         return guesses
 
-def get_spacy_nlp_pipeline_for_preamble(vocab,model_name="en_core_web_trf"):
+def get_spacy_nlp_pipeline_for_preamble(vocab=None,model_name="en_core_web_trf"):
     ########## Creates spacy nlp pipeline for Judgment Preamble. the sentence splitting is done on new lines.
-    nlp = spacy.load(model_name,vocab=vocab,exclude=['ner'])
+    if vocab is not None:
+        nlp = spacy.load(model_name,vocab=vocab,exclude=['ner'])
+    else:
+        nlp = spacy.load(model_name, exclude=['ner'])
     nlp.max_length = 30000000
     ########### Split sentences on new lines for preamble
     nlp.add_pipe("my_sentencizer", before='parser')

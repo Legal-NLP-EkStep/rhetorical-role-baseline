@@ -6,8 +6,10 @@ import spacy
 from tqdm import tqdm
 from transformers import BertTokenizer
 
-from data_prep import attach_short_sentence_boundries_to_next
+from data_prep import attach_short_sentence_boundries_to_next, seperate_and_clean_preamble, \
+    get_spacy_nlp_pipeline_for_preamble
 from data_prep import get_spacy_nlp_pipeline_for_indian_legal_text
+from torchserve.api_inference_helper import get_text_from_indiankanoon_url
 
 spacy.prefer_gpu()
 
@@ -38,6 +40,7 @@ def split_into_sentences_tokenize_write(prediction_input_ls_format, custom_proce
                 nlp_preamble_doc = nlp(preamble_text)
                 nlp_judgement_doc = nlp(judgement_text)
                 nlp_doc = spacy.tokens.Doc.from_docs([nlp_preamble_doc, nlp_judgement_doc])
+            doc_txt = nlp_doc.text
             sentence_boundries = [(sent.start_char, sent.end_char) for sent in nlp_doc.sents]
             revised_sentence_boundries = attach_short_sentence_boundries_to_next(sentence_boundries, doc_txt)
             adjudicated_doc['annotations'] = []
@@ -63,7 +66,7 @@ def split_into_sentences_tokenize_write(prediction_input_ls_format, custom_proce
 
 
 if __name__ == "__main__":
-    [_, custom_data_path, custom_processed_data_path] = sys.argv
+    #[_, custom_data_path, custom_processed_data_path] = sys.argv
     # prediction_input_files_path = '/data/hsln_prediction/input_data_rgnlu.json' ###### in label studio format
     #     prediction_input_files_path = '/data/hsln_prediction/input_data_rgnlu.json'
     #     prediction_input_ls_format=[  {"id": 1,
@@ -73,7 +76,18 @@ if __name__ == "__main__":
     #   "data": { "text": "2 Immediately after the assault on 12.11.1997, the Complainant  Sukhdev was admitted to the Civil Hospital, Ashok Nagar for treatment.\n2.3 The medical examination of the Complainant  Sukhdev was conducted by Dr. M. Bhagat  P.W.6 at the Civil Hospital, Ashok Nagar, which recorded the following injuries : (i) Stab Wound  3.5 x 1 cm  deep in the chest cavity, over the left side of the chest.\n        (ii) Spindle shaped incised wound  3 x 2 cm  muscle deep, present on the upper region of the right buttocks.\n        (iii) Stab Wound  2 x 1 cm  over subscapula region, left side. Bleeding was present.\n        (iv) Stab Wound  1 x 1 cm  over illeal region of hip, left side. Bleeding was present.\n The medical report further stated that the injuries were caused by a sharpedged, pointed object.\n 2.4 The Complainant  Sukhdev was referred to the District Hospital, Guna wherein XRay of his chest region was conducted by P.W. 8  Dr.\n       Raghuvanshi. The Report states that there was \"haziness in lungs, left side of chest, present due to trauma of chest\".\n               Dr. Raghuvanshi  P.W. 8 stated in his deposition that the lungs of the Complainant  Sukhdev suffered injury, which resulted in blood seeping in the lungs, leading to haziness in the X Ray image.\n 2.5 On 24.11.1997, the Accused /Respondent Nos. 1 and 2 were arrested by the Police. The weapon of offence i.e. the knife allegedly used by Accused /Respondent No. 1 was recovered from the bushes next to the bridge, on the statement given by Accused /Respondent No. 1.\n 2" }
     #   }
     # ]
-    prediction_input_ls_format = json.load(open(custom_data_path))
+    import re
+    text = get_text_from_indiankanoon_url('https://indiankanoon.org/doc/82089984/')
+    nlp_preamble = get_spacy_nlp_pipeline_for_preamble()
+    preamble_text, preamble_end = seperate_and_clean_preamble(text, nlp_preamble)
+    judgement_text = text[preamble_end:]
+    judgement_text = re.sub(r'([^.\"\?])\n+ *', r'\1 ', judgement_text)
+    # logger.info("Received text: '%s'", sentences)
+    input_ls_format = [
+        {'id': id, 'data': {'preamble_text': preamble_text, 'judgement_text': judgement_text,
+                            'text': preamble_text + " " + judgement_text}}]
+
+    #prediction_input_ls_format = json.load(open(custom_data_path))
     # prediction_input_ls_format = json.load(open(prediction_input_files_path))
     nlp = get_spacy_nlp_pipeline_for_indian_legal_text(model_name="en_core_web_trf",
                                                        disable=["attribute_ruler", "lemmatizer", 'ner'])
@@ -84,4 +98,4 @@ if __name__ == "__main__":
 
     MAX_DOCS = -1
 
-    split_into_sentences_tokenize_write(prediction_input_ls_format, custom_processed_data_path, nlp)
+    split_into_sentences_tokenize_write(input_ls_format, '/', nlp)
