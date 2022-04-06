@@ -129,6 +129,10 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         if type(sentences) is not str or not sentences:
             raise PredictionException("Missing text in input for processing", 516)
 
+        # check if judgement can be processed based on number of tokens (currently based on available VM resources)
+        if len(self.nlp.tokenizer(sentences)) > 52000:
+            raise PredictionException("Judgement too big to process", 515)
+
         # clean judgement
         preamble_text, preamble_end = seperate_and_clean_preamble(sentences, self.nlp_preamble)
         judgement_text = sentences[preamble_end:]
