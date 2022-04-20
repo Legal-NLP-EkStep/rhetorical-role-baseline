@@ -1,10 +1,13 @@
-import re
-import spacy
-import re
 from spacy.pipeline import Sentencizer
 from typing import Optional, List, Callable
 from spacy.language import Language
 from spacy.tokens import Span
+from typing import Optional, List, Callable
+
+from spacy.language import Language
+from spacy.pipeline import Sentencizer
+from spacy.tokens import Span
+
 
 @Language.factory(
     "my_sentencizer",
@@ -13,7 +16,7 @@ from spacy.tokens import Span
     default_score_weights={"sents_f": 1.0, "sents_p": 0.0, "sents_r": 0.0},
 )
 def make_sentencizer(
-    nlp: Language,
+        nlp: Language,
     name: str,
     punct_chars: Optional[List[str]],
     overwrite: bool,
@@ -660,8 +663,15 @@ def convert_upper_case_to_title(txt):
 
 def guess_preamble_end(truncated_txt, nlp):
     ######### Guess the end of preamble using hueristics
+    max_length = 10000
     preamble_end = 0
-    truncated_doc = nlp(truncated_txt)
+    tokens = nlp.tokenizer(truncated_txt)
+    if len(tokens) > max_length:
+        chunks = [tokens[i:i + max_length] for i in range(0, len(tokens), max_length)]
+        nlp_docs = [nlp(i.text) for i in chunks]
+        truncated_doc = spacy.tokens.Doc.from_docs(nlp_docs)
+    else:
+        truncated_doc = nlp(truncated_txt)
     successive_preamble_pattern_breaks = 0
     preamble_patterns_breaks_theshold = 1  ####### end will be marked after these many consecutive sentences which dont match preamble pattern
     sent_list = [sent for sent in truncated_doc.sents]
@@ -802,7 +812,8 @@ def attach_short_sentence_boundries_to_next(revised_sentence_boundries, doc_txt)
                 sentence_start_char = sentences_to_attach_to_next[0]
             else:
                 sentence_start_char = sentence_boundry[0]
-            sentence_length_char = sentence_boundry[1] - sentence_start_char
+            # sentence_length_char = sentence_boundry[1] - sentence_start_char
+            sentence_length_char = len(doc_txt[sentence_start_char: sentence_boundry[1]].strip())
             if sentence_length_char > min_char_cnt_per_sentence:
                 concatenated_sentence_boundries.append((sentence_start_char, sentence_boundry[1]))
                 sentences_to_attach_to_next = ()
