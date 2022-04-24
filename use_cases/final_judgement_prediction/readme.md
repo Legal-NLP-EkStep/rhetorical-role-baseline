@@ -7,6 +7,19 @@ This code base contains files for predicting and explaining the court judgments 
 For dataset you can contact authors of ACL-IJCNLP 2021 paper "ILDC for CJPE: Indian Legal Documents Corpus for Court
 Judgment Prediction and Explanation" or visit their [github repo](https://github.com/Exploration-Lab/CJPE).
 
+## Trained models
+
+Download [Model](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/judgement_prediction/models/XLnet_ILDC_ANALYSIS.pt)
+trained on only ANALYSIS sentences for reproducing results on paper
+
+Load this file before running on test set.
+
+Use following code in a cell after building the model to load the weights
+
+```
+torch.load('XLnet_ILDC_ANALYSIS.pt')
+```
+
 ## Processing raw data
 
 We process each judgement and pass them through our rhetorical role model to prove the effectiveness of using specific

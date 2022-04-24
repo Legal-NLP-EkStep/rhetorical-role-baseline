@@ -13,6 +13,10 @@ through bertsumm where sentences were selected to create the summaries. To see t
 provided sentences with the predicted rhetorical roles from our model. This helped in generating summaries of various
 roles separately. This approach improved the generated summaries.
 
+## 3. Extractive summarization trained model file
+
+[Model file](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Extractive_summarization/model/model_step_9000.pt)
+
 # Setup
 
 **Python version**: This code is in Python3.7
@@ -21,9 +25,9 @@ roles separately. This approach improved the generated summaries.
 
 ## Data Preparation
 
-### Option 1: download the processed data
+### Option 1: Download the processed data. Data has already been processed in .pt files that you can use directly.
 
-[Pre-processed data](https://)
+[Pre-processed data](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Extractive_summarization/data/data.zip)
 
 unzip the zipfile
 
@@ -31,40 +35,13 @@ unzip the zipfile
 
 #### Step 1 Download Stories
 
-Download and unzip the `stories` directories from [here](http://cs.nyu.edu/~kcho/DMQA/) for both CNN and Daily Mail. Put
-all  `.story` files in one directory (e.g. `../raw_stories`)
+Download and unzip the `sample json` file
+from [here](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Extractive_summarization/data/sample.json)
+. This a small set of our train data for reference.
 
 #### Note: Replace with your data
 
-#### Step 2. Download Stanford CoreNLP
-
-We will need Stanford CoreNLP to tokenize the data. Download it [here](https://stanfordnlp.github.io/CoreNLP/) and unzip
-it. Then add the following command to your bash_profile:
-
-```
-export CLASSPATH=/path/to/stanford-corenlp-full-2017-06-09/stanford-corenlp-3.8.0.jar
-```
-
-replacing `/path/to/` with the path to where you saved the `stanford-corenlp-full-2017-06-09` directory.
-
-#### Step 3. Sentence Splitting and Tokenization
-
-```
-python preprocess.py -mode tokenize -raw_path RAW_PATH -save_path TOKENIZED_PATH
-```
-
-* `RAW_PATH` is the directory containing story files (`../raw_stories`), `JSON_PATH` is the target directory to save the generated json files (`../merged_stories_tokenized`)
-
-
-####  Step 4. Format to Simpler Json Files
- 
-```
-python preprocess.py -mode format_to_lines -raw_path RAW_PATH -save_path JSON_PATH -n_cpus 1 -use_bert_basic_tokenizer false -map_path MAP_PATH
-```
-
-* `RAW_PATH` is the directory containing tokenized files (`../merged_stories_tokenized`), `JSON_PATH` is the target directory to save the generated json files (`../json_data/cnndm`), `MAP_PATH` is the  directory containing the urls files (`../urls`)
-
-####  Step 5. Format to PyTorch Files
+#### Step 2. Format to PyTorch Files
 ```
 python preprocess.py -mode format_to_bert -raw_path JSON_PATH -save_path BERT_DATA_PATH -lower -n_cpus 1 -log_file ../logs/preprocess.log max_src_nsents 500000 -min_src_nsents 1 -min_src_ntokens_per_sent 0 -max_src_ntokens_per_sent 512 -min_tgt_ntokens 0 -max_tgt_ntokens 200000 
 ```
