@@ -17,6 +17,15 @@ roles separately. This approach improved the generated summaries.
 
 [Model file](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Extractive_summarization/model/model_step_9000.pt)
 
+## 4. Extractive summarization data
+
+We have used data prepared by lawbriefs. You can get the raw data by requesting on this [email](adityagor282@gmail.com).
+
+Most of the data appears have abstractive summaries which are not suitable for extractive summarization task. We also
+noticed that the data prepared has some exact sentences as
+present in judgement. So we have used a mapping logic to create extractive summaries by mapping sentences present in
+abstractive summaries with sentences in judgement.
+
 # Setup
 
 **Python version**: This code is in Python3.7

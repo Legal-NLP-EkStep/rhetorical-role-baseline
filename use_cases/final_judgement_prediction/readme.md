@@ -14,11 +14,11 @@ trained on only ANALYSIS sentences for reproducing results on paper
 
 Load this file before running on test set.
 
-Use following code in a cell after building the model to load the weights
+To load saved model:
 
-```
-torch.load('XLnet_ILDC_ANALYSIS.pt')
-```
+1. Download the model file
+2. In cell 2 of notebook set LOAD_SAVED_MODEL = True
+3. Set PATH to the path of downloaded model file
 
 ## Processing raw data
 
