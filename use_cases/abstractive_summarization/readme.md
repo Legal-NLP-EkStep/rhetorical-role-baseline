@@ -25,7 +25,7 @@ This model was trained on [**sec-litigation-releases**](https://www.sec.gov/liti
 
 The test data consisted of 50 documents randomly selected from the
 Law Briefs dataset.These legal documents come annotated with summaries
-(abstractive summaries of the document) by expert editors.These summaries behaved as the gold standard summary for these judgments .
+(abstractive summaries of the document) by expert editors.These summaries behaved as the gold standard summary for these judgments .The test data along with summaries with and without rhetorical role are [here](https://storage.cloud.google.com/indianlegalbert/OPEN_SOURCED_FILES/Abstractive_summarization/abstractive_summaries%20(1).csv)
 
 ## 6.Generating summaries on your own data
 
