@@ -25,7 +25,7 @@ This model was trained on [**sec-litigation-releases**](https://www.sec.gov/liti
 
 The test data consisted of 50 documents randomly selected from the
 Law Briefs dataset.These legal documents come annotated with summaries
-(abstractive summaries of the document) by expert editors.These summaries behaved as the gold standard summary for these judgments .The test data along with summaries with and without rhetorical role are [here](https://storage.cloud.google.com/indianlegalbert/OPEN_SOURCED_FILES/Abstractive_summarization/abstractive_summaries%20(1).csv)
+(abstractive summaries of the document) by expert editors.These summaries behaved as the gold standard summary for these judgments .The test data along with summaries with and without rhetorical role are [here](gs://indianlegalbert/OPEN_SOURCED_FILES/Abstractive_summarization/abstractive_summaries_data.csv)
 
 ## 6.Generating summaries on your own data
 
@@ -49,3 +49,8 @@ where:
 ```<judgment_summary_mapping>:path to the json consisting of judgment and gold standard summaries```
 
 ## Evaluation results
+| Model                   | Rouge 1 | Rouge 2 | Rouge L |
+|-------------------------|---------|---------|---------|
+|Legal Pegasus with rr    | 0.56    | 0.36    | 0.48    |
+|-------------------------|---------|---------|---------|
+|Legal Pegasus without rr |0.55     | 0.34    | 0.47    |
