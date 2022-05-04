@@ -214,6 +214,7 @@ class RhetoricalRolePredictorHandler(BaseHandler):
             annotations = file['annotations']
             for i, label in enumerate(annotations[0]['result']):
                 label['value']['labels'] = [pred_labels[pred_id][i]]
+                label['value']['id'] = i + 1
 
         return [input]
 
