@@ -175,7 +175,8 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         # clean judgement
         preamble_text, preamble_end = seperate_and_clean_preamble(sentences, self.nlp_preamble)
         judgement_text = sentences[preamble_end:]
-        judgement_text = re.sub(r'([^.\"\?])\n+ *', r'\1 ', judgement_text)
+        #####  replace new lines in middle of sentence with spaces.
+        judgement_text = re.sub(r'(\w[ -]*)(\n+)', r'\1 ', judgement_text)
         # logger.info("Received text: '%s'", sentences)
         input_ls_format = [
             {'id': id, 'data': {'preamble_text': preamble_text, 'judgement_text': judgement_text,
