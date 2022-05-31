@@ -1,10 +1,13 @@
+import copy
 import json
 import logging
 import os
 import re
 import uuid
+from urllib.request import Request, urlopen
 
 import torch
+from bs4 import BeautifulSoup as soup, Tag
 from transformers import BertTokenizer
 from ts.torch_handler.base_handler import BaseHandler
 from ts.utils.util import PredictionException
@@ -125,6 +128,46 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         else:
             return False
 
+    def check_indiankanoon_url(self, url):
+        regex = re.compile(r'^https?://indiankanoon.org', re.IGNORECASE)
+        return url is not None and regex.search(url)
+
+    def get_text_from_indiankanoon_url(self, url):
+        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+
+        try:
+            webpage = urlopen(req, timeout=10).read()
+            page_soup = soup(webpage, "html.parser")
+
+            preamble_tags = page_soup.find_all('pre')
+            preamble_txt = ''.join(
+                [i.text for i in preamble_tags if i.get('id') is not None and i['id'].startswith('pre_')])
+            judgment_txt_tags = page_soup.find_all(['p', 'blockquote'])
+            judgment_txt = ''
+            for judgment_txt_tag in judgment_txt_tags:
+                tag_txt = ''
+                if judgment_txt_tag.get('id') is not None and (judgment_txt_tag['id'].startswith('p_') or
+                                                               judgment_txt_tag['id'].startswith('blockquote_')):
+                    for content in judgment_txt_tag.contents:
+                        if isinstance(content, Tag):
+                            if not (content.get('class') is not None and 'hidden_text' in content['class']):
+                                tag_txt = tag_txt + content.text
+                        else:
+                            tag_txt = tag_txt + str(content)
+                    tag_txt = re.sub(r'\s+(?!\s*$)', ' ',
+                                     tag_txt)  ###### replace the multiple spaces, newlines with space except for the ones at the end.
+                    tag_txt = re.sub(r'([.\"\?])\n', r'\1 \n\n',
+                                     tag_txt)  ###### add the extra new line for correct sentence breaking in spacy
+
+                    judgment_txt = judgment_txt + tag_txt
+            judgment_txt = re.sub(r'\n{2,}', '\n\n', judgment_txt)
+            judgment_txt = preamble_txt + judgment_txt
+
+        except:
+            judgment_txt = ''
+
+        return judgment_txt.strip()
+
     def preprocess(self, data):
         """ Preprocessing input request by tokenizing
             Extend with your own preprocessing steps as needed
@@ -165,6 +208,27 @@ class RhetoricalRolePredictorHandler(BaseHandler):
             sentences = text.decode('utf-8')
         except:
             sentences = text
+
+        url_text = sentences.strip()
+        if self.check_indiankanoon_url(url_text):
+            indiankanoon_url = url_text
+            judgment_text = ''
+        else:
+            logger.info("Judgement text recieved!!!")
+            judgment_text = url_text
+            indiankanoon_url = ''
+
+        if judgment_text == '' and indiankanoon_url == '':
+            raise PredictionException("Missing text in input for processing", 516)
+
+        elif judgment_text == '':
+            logger.info('Url received, getting text!!!')
+            text = self.get_text_from_indiankanoon_url(indiankanoon_url)
+            if text == '':
+                raise PredictionException("Missing text in input for processing", 516)
+            else:
+                sentences = copy.deepcopy(text)
+
         if type(sentences) is not str or not sentences:
             raise PredictionException("Missing text in input for processing", 516)
 
