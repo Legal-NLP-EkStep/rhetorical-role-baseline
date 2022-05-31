@@ -6,6 +6,7 @@ from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup as soup,Tag
 
 
+
 def get_text_from_indiankanoon_url(url):
     req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
 
@@ -27,16 +28,17 @@ def get_text_from_indiankanoon_url(url):
                             tag_txt = tag_txt + content.text
                     else:
                         tag_txt = tag_txt + str(content)
-                tag_txt = re.sub(r'\s+(?!\s*$)',' ',tag_txt)
-                tag_txt = re.sub(r'\.\n','. \n',tag_txt)
+                tag_txt = re.sub(r'\s+(?!\s*$)',' ',tag_txt) ###### replace the multiple spaces, newlines with space except for the ones at the end.
+                tag_txt = re.sub(r'([.\"\?])\n',r'\1 \n\n',tag_txt) ###### add the extra new line for correct sentence breaking in spacy
+
                 judgment_txt = judgment_txt + tag_txt
+        judgment_txt = re.sub(r'\n{2,}', '\n\n', judgment_txt)
         judgment_txt = preamble_txt + judgment_txt
 
     except:
         judgment_txt=''
 
     return judgment_txt.strip()
-
 
 def get_predicted_rhetorical_roles(ip, txt, inference_token):
     rr_api_url = f'http://{ip}:8080/predictions/RhetorcalRolePredictor/'
