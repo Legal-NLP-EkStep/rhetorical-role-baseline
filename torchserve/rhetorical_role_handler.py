@@ -190,9 +190,6 @@ class RhetoricalRolePredictorHandler(BaseHandler):
             id = recieved_data.get('id')
             token = recieved_data.get('inference_token')
             is_html = False if recieved_data.get('is_html') is None else recieved_data.get('is_html')
-            if text:
-                if bool(soup(text, 'html.parser').find()):
-                    is_html = True
         if id is None:
             uid = uuid.uuid4()
             id = "RhetoricalRoleInference_" + str(uid.hex)
@@ -205,7 +202,7 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         if not self.check_token_authentication_and_update(token=token):
             raise PredictionException("Token reached maximum usability, contact support!!", 520)
 
-        if is_html:
+        if is_html or bool(soup(text, 'html.parser').find()):
             logger.info('HTML received, getting text!!!')
             text = self.get_text_from_indiankanoon_html(text)
             if text == '':
