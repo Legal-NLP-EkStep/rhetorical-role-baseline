@@ -4,7 +4,6 @@ import logging
 import os
 import re
 import uuid
-from urllib.request import Request, urlopen
 
 import torch
 from bs4 import BeautifulSoup as soup, Tag
@@ -132,11 +131,8 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         regex = re.compile(r'^https?://indiankanoon.org', re.IGNORECASE)
         return url is not None and regex.search(url)
 
-    def get_text_from_indiankanoon_url(self, url):
-        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-
+    def get_text_from_indiankanoon_html(self, webpage):
         try:
-            webpage = urlopen(req, timeout=10).read()
             page_soup = soup(webpage, "html.parser")
 
             preamble_tags = page_soup.find_all('pre')
@@ -183,6 +179,7 @@ class RhetoricalRolePredictorHandler(BaseHandler):
 
         id = None
         text = ""
+        is_html = False
         token = None
         recieved_data = data[0].get("data")
         if recieved_data is None:
@@ -192,6 +189,10 @@ class RhetoricalRolePredictorHandler(BaseHandler):
             text = recieved_data.get('text')
             id = recieved_data.get('id')
             token = recieved_data.get('inference_token')
+            is_html = False if recieved_data.get('is_html') is None else recieved_data.get('is_html')
+            if text:
+                if bool(soup(text, 'html.parser').find()):
+                    is_html = True
         if id is None:
             uid = uuid.uuid4()
             id = "RhetoricalRoleInference_" + str(uid.hex)
@@ -204,30 +205,18 @@ class RhetoricalRolePredictorHandler(BaseHandler):
         if not self.check_token_authentication_and_update(token=token):
             raise PredictionException("Token reached maximum usability, contact support!!", 520)
 
-        try:
-            sentences = text.decode('utf-8')
-        except:
-            sentences = text
-
-        url_text = sentences.strip()
-        if self.check_indiankanoon_url(url_text):
-            indiankanoon_url = url_text
-            judgment_text = ''
-        else:
-            logger.info("Judgement text recieved!!!")
-            judgment_text = url_text
-            indiankanoon_url = ''
-
-        if judgment_text == '' and indiankanoon_url == '':
-            raise PredictionException("Missing text in input for processing", 516)
-
-        elif judgment_text == '':
-            logger.info('Url received, getting text!!!')
-            text = self.get_text_from_indiankanoon_url(indiankanoon_url)
+        if is_html:
+            logger.info('HTML received, getting text!!!')
+            text = self.get_text_from_indiankanoon_html(text)
             if text == '':
                 raise PredictionException("Missing text in input for processing", 516)
             else:
                 sentences = copy.deepcopy(text)
+        else:
+            try:
+                sentences = text.decode('utf-8')
+            except:
+                sentences = text
 
         if type(sentences) is not str or not sentences:
             raise PredictionException("Missing text in input for processing", 516)
