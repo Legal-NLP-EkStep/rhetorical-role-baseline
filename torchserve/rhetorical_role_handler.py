@@ -219,7 +219,7 @@ class RhetoricalRolePredictorHandler(BaseHandler):
             raise PredictionException("Missing text in input for processing", 516)
 
         # check if judgement can be processed based on number of tokens (currently based on available VM resources)
-        if len(self.nlp.tokenizer(sentences)) > 52000:
+        if len(self.nlp.tokenizer(sentences)) > 150000:
             raise PredictionException("Judgement too big to process", 515)
 
         # clean judgement
