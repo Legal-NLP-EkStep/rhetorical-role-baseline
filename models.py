@@ -161,6 +161,7 @@ class BertTokenEmbedder(torch.nn.Module):
         # for input_ids,attention_mask in zip(input_ids_chunk_list,attention_mask_chunk_list):
         #     with torch.no_grad():
         #         output = self.bert(input_ids=input_ids, attention_mask=attention_mask)
+        #         output = output[0]
         #         #output = output[0].to('cpu')
         #     outputs.append(copy.deepcopy(output))
         #     torch.cuda.empty_cache()
