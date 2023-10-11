@@ -1,3 +1,5 @@
+## Please use this repository if you are interested in training your own rhetorical role prediction model and understanding details of the [Corpus for Automatic Structuring of Legal Documents](http://www.lrec-conf.org/proceedings/lrec2022/pdf/2022.lrec-1.470.pdf). If you want to use pre-trained models on your own data then please use [opennyai library](https://github.com/OpenNyAI/Opennyai).
+
 # BUILD: Benchmark for Understanding Indian Legal Documents
 
 
