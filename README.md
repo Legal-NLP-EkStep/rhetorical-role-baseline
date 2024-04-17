@@ -52,7 +52,7 @@ a dict with the following keys:
 The baseline model was created using unified deep
 learning architecture SciBERT-HSLN approach suggested by (Brack et al., 2021). SciBERT was replaced
 with BERT BASE which are published by (Devlin et
-al., 2018). Baseline model achieved micro f1 of 77.7 on hiddent test data. 
+al., 2018). Baseline model achieved weighted f1 of 77.7 on hiddent test data. 
 
 ### 3.1 Run Baseline Model on dev data
 #### 3.1.1 Install Dependencies
