@@ -1,5 +1,7 @@
 ## Please use this repository if you are interested in training your own rhetorical role prediction model and understanding details of the [Corpus for Automatic Structuring of Legal Documents](http://www.lrec-conf.org/proceedings/lrec2022/pdf/2022.lrec-1.470.pdf). If you want to use pre-trained models on your own data then please use [opennyai library](https://github.com/OpenNyAI/Opennyai).
 
+## The train, dev and test data is now available on [Huggingface Datasets](https://huggingface.co/datasets/opennyaiorg/InRhetoricalRoles)
+
 # BUILD: Benchmark for Understanding Indian Legal Documents
 
 
@@ -22,9 +24,11 @@ classified  into one of the 13 pre-defined rhetorical roles.
 
 
 There are two  files:
-- [Training Data](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/train.json)
+- [Training Data](https://huggingface.co/datasets/opennyaiorg/InRhetoricalRoles/resolve/main/train.json?download=true)
 
-- [Dev Data](https://storage.googleapis.com/indianlegalbert/OPEN_SOURCED_FILES/Rhetorical_Role_Benchmark/Data/dev.json)
+- [Dev Data](https://huggingface.co/datasets/opennyaiorg/InRhetoricalRoles/resolve/main/dev.json?download=true)
+
+- [Test Data](https://huggingface.co/datasets/opennyaiorg/InRhetoricalRoles/resolve/main/test.json?download=true)
 
 
 ### 2.2 Input Data Format
